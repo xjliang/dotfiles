@@ -98,7 +98,7 @@ Plug 'tpope/vim-repeat'
 "Plug 'sjl/gundo.vim'
 Plug 'mbbill/undotree'
 Plug 'ludovicchabant/vim-gutentags'
-Plug 'skywind3000/asyncrun.vim'
+Plug 'skywind3000/asyncrun.vim', {'for': ['c', 'cpp']}
 " requires compilation
 "Plug 'xolox/vim-misc'
 "Plug 'xolox/vim-notes'
