@@ -145,6 +145,8 @@ set spellfile=$HOME/dotfiles/vim/spell/en.latin1.add
 " TODO: transfer all our custom mapping to our vim_shortcuts file
 
 " DISPLAY SETTINGS
+set t_Co=256   " This is may or may not needed.
+" colorscheme PaperColor
 colorscheme valloric    " sets the colorscheme
 set background=dark     " enable for dark terminals
 set scrolloff=2         " 2 lines above/below cursor when scrolling
@@ -273,6 +275,7 @@ set textwidth=80
 
 " this makes the color after the textwidth column highlighted
 set colorcolumn=+1
+highlight ColorColumn ctermbg=235
 
 " options for formatting text; see :h formatoptions
 set formatoptions=tcroqnj
