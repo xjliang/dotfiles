@@ -1024,7 +1024,7 @@ let g:ale_python_flake8_options = '--max-line-length=80 ' .
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let g:airline_powerline_fonts = 1
-let g:airline_theme = 'tomorrow'
+let g:airline_theme = 'onedark'
 " Removes the function name from the statusline; this helps prevent filename
 " truncation.
 let g:airline#extensions#tagbar#enabled = 0
