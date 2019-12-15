@@ -25,10 +25,9 @@ call plug#begin('~/.vim/plugged')
 " the plugin's Plugin command.
 
 Plug 'vim-scripts/FSwitch', {'for': ['c', 'cpp']}
-Plug 'vim-scripts/FuzzyFinder'
+"Plug 'vim-scripts/FuzzyFinder'
 "Plug 'JesseKPhillips/d.vim'
 Plug 'vim-scripts/L9'
-" Plug 'Lokaltog/vim-easymotion'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-airline/vim-airline'
 Plug 'Raimondi/delimitMate'
@@ -37,7 +36,6 @@ Plug 'SirVer/ultisnips'
 Plug 'Valloric/ListToggle'
 Plug 'Valloric/MatchTagAlways', { 'for': 'html' }
 "Plug 'Valloric/Vim-Jinja2-Syntax'
-"Plug 'Valloric/python-indent'
 Plug 'Valloric/vim-operator-highlight'
 Plug 'Valloric/vim-valloric-colorscheme'
 "Plug 'Valloric/xmledit'
@@ -54,12 +52,13 @@ Plug 'godlygeek/tabular'
 " For markdown preview; call :Preview to open rendered in browser
 " Plug 'greyblake/vim-preview'
 "Plug 'groenewege/vim-less'
-Plug '~/.fzf'
+"Plug '~/.fzf'
 " Requires fzf installed in ~/.fzf
 " Also works nicer if 'bat' is installed (for file preview syntax highlight)
 " See our zshrc for our fzf default options
-Plug 'junegunn/fzf.vim'
-"Plug 'justinmk/vim-sneak'
+"Plug 'junegunn/fzf.vim'
+Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+Plug 'justinmk/vim-sneak'
 Plug 'honza/vim-snippets'
 " Yet another markdown preview plugin
 " After install, needs: mkdp#util#install()
@@ -69,21 +68,21 @@ Plug 'michaeljsmith/vim-indent-object'
 Plug 'mileszs/ack.vim'
 Plug 'octol/vim-cpp-enhanced-highlight', {'for': 'cpp' }
 "Plug 'othree/eregex.vim'
-Plug 'tpope/vim-markdown', {'for': 'markdown'}
-Plug 'iamcco/markdown-preview.nvim', {'for': 'markdown'}
+"Plug 'tpope/vim-markdown', {'for': 'markdown'}
+"Plug 'iamcco/markdown-preview.nvim', {'for': 'markdown'}
 Plug 'othree/html5.vim', {'for': 'html'}
 Plug 'mattn/emmet-vim', {'for': 'html'}
 Plug 'skammer/vim-css-color', {'for': 'css'}
 Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
 Plug 'elzr/vim-json', {'for': 'json'}
+Plug 'Valloric/python-indent', {'for': 'python'}
 Plug 'vim-scripts/python.vim', {'for': 'python'}
 Plug 'vim-scripts/python_match.vim', {'for': 'python'}
 "Plug 'prabirshrestha/async.vim'
 "Plug 'prabirshrestha/vim-lsp'
 "Plug 'rust-lang/rust.vim'
 " No async support? Using ALE now.
-" Plug 'scrooloose/syntastic'
-Plug 'dense-analysis/ale'
+Plug 'dense-analysis/ale', {'for': ['c', 'cpp', 'python']}
 Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
 " Problems with fugitive, re-evalute when upstream fixes the issue
 " Plug 'sjl/splice.vim'
@@ -94,7 +93,12 @@ Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
 Plug 'tomtom/tcomment_vim'
 " Plug 'tomtom/tlib_vim'
 Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
+"Plug 'airblade/vim-gitgutter'
+if has('nvim') || has('patch-8.0.902')
+  Plug 'mhinz/vim-signify'
+else
+  Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+endif
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-repeat'
 "Plug 'sjl/gundo.vim'
@@ -102,8 +106,6 @@ Plug 'mbbill/undotree'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'skywind3000/asyncrun.vim'
 " requires compilation
-" Using fzf now!
-" Plug 'wincent/Command-T'
 "Plug 'xolox/vim-misc'
 "Plug 'xolox/vim-notes'
 "Plug 'xolox/vim-pyref'
@@ -186,7 +188,7 @@ set ignorecase          " case insensitive searching
 set smartcase           " but become case sensitive if you type uppercase characters
 " this can cause problems with other filetypes
 " see comment on this SO question http://stackoverflow.com/questions/234564/tab-key-4-spaces-and-auto-indent-after-curly-braces-in-vim/234578#234578
-"set smartindent         " smart auto indenting
+set smartindent         " smart auto indenting
 set autoindent          " on new lines, match indent of previous line
 set copyindent          " copy the previous indentation on autoindenting
 set cindent             " smart indenting for c-like code
@@ -358,7 +360,8 @@ au vimrc FileType cpp
 au vimrc FileType c
       \ set tabstop=8 |
       \ set shiftwidth=8 |
-      \ set softtabstop=8
+      \ set softtabstop=8 |
+      \ set noexpandtab
 
 " The stupid rust filetype plugin overrides our settings!
 "au vimrc FileType rust
@@ -645,81 +648,45 @@ noremap <leader>f <c-i>
 "                       ***  HERE BE PLUGINS  ***                         "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                               Command-T                                 "
+"                               LeaderF                                   "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:CommandTMaxHeight = 30
-let g:CommandTMatchWindowReverse = 1 " shows results in reverse order
+let g:Lf_ShortcutF = "<leader>ff"
+noremap <leader>fb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
+noremap <leader>fm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
+noremap <leader>ft :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
+noremap <leader>fl :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
+" "let g:Lf_ShortcutB = '<m-n>'
+" noremap <c-n> :LeaderfMru<cr>
+" noremap <m-p> :LeaderfFunction!<cr>
+" noremap <m-n> :LeaderfBuffer<cr>
+" noremap <m-m> :LeaderfTag<cr>
+let g:Lf_StlSeparator = { 'left': '', 'right': '', 'font': '' }
 
-" If we're at_work, then use the ruby finder because that will not traverse
-" directories matched by wildignore. The 'find' scanner will only filter out
-" paths matching wildignore *AFTER* enumerating all the paths, which is when
-" some dirs are mapped to the network.
-if at_work
-  let g:CommandTFileScanner = 'ruby'
-else
-  let g:CommandTFileScanner = 'find'
-endif
+let g:Lf_RootMarkers = ['.project', '.root', '.svn', '.git']
+let g:Lf_WorkingDirectoryMode = 'Ac'
+let g:Lf_WindowHeight = 0.30
+let g:Lf_CacheDirectory = expand('~/.vim/cache')
+let g:Lf_ShowRelativePath = 0
+let g:Lf_HideHelp = 1
+let g:Lf_StlColorscheme = 'powerline'
+let g:Lf_PreviewResult = {'Function':0, 'BufTag':0}
 
-let g:CommandTTraverseSCM = 'pwd'
-let g:CommandTHighlightColor = 'CursorLine'
-
-set wildignore+=*.o,*.obj,.git,*.pyc,*.so,blaze*,READONLY,llvm,Library*
-set wildignore+=CMakeFiles,packages/*,**/packages/*,**/node_modules/*
-
-" This appears to be necessary; command-t doesn't appear to be falling back to
-" wildignore on its own.
-let g:CommandTWildIgnore=&wildignore
-
-" MacVim doesn't use tab focus to switch from command-t input field to the file
-" list, so using j and k for next and prev screws everything up. But it does
-" work on linux so let's use it there.
-if has("gui_gtk2") || has("gui_gtk3")
-  let g:CommandTSelectNextMap = [ '<down>' ]
-  let g:CommandTSelectPrevMap = [ '<up>' ]
-endif
-
-" Trying out fzf, might go back to Command-T
-" nnoremap <leader>t :CommandT<cr>
-" nnoremap <leader>n :CommandTMRU<cr>
-" nnoremap <leader>' :CommandTFlush<cr>
-
+" Trying out LeaderF
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                fzf.vim                                  "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " This hides the dumb "N/M" propt which shows num match/num total entries
-let $FZF_DEFAULT_OPTS .= '--color pointer:0,bg+:-1,info:0,prompt:0 --inline-info'
-" This hides the current folder prefix to file search
-let g:fzf_files_options = ['--prompt', '> ']
+" let $FZF_DEFAULT_OPTS .= '--color pointer:0,bg+:-1,info:0,prompt:0 --inline-info'
+" " This hides the current folder prefix to file search
+" let g:fzf_files_options = ['--prompt', '> ']
+""
+"nnoremap <leader>t :Files<cr>
+"nnoremap <leader>n :History<cr>
 
-nnoremap <leader>t :Files<cr>
-nnoremap <leader>n :History<cr>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                 ctrlp                                   "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" let g:ctrlp_map = '<leader>t'
-" nnoremap <leader>n :CtrlPMRU<cr>
-" nnoremap <leader>' :CtrlPClearCache<cr>
-
-" Use Vim's cwd
-let g:ctrlp_working_path_mode = 0
-let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:30'
-
-" Faster indexing of files; requires having ag (AKA the_silver_searcher)
-" installed.
-let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --hidden
-      \ --ignore .git
-      \ --ignore .svn
-      \ --ignore .hg
-      \ --ignore .DS_Store
-      \ --ignore "**/*.pyc"
-      \ --ignore BoostParts
-      \ -g ""'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 undotree                                "
@@ -808,7 +775,7 @@ vnoremap <leader>a, :Tabularize /,/l0r1<CR>
 let g:UltiSnipsSnippetsDir         = $HOME . '/dotfiles/vim/UltiSnips'
 "let g:UltiSnipsExpandTrigger       = "<m-s>"
 let g:UltiSnipsExpandTrigger       = "<tab>"
-let g:UltiSnipsListSnippets        = "<c-m-s>"
+"let g:UltiSnipsListSnippets        = "<c-m-s>"
 let g:UltiSnipsJumpForwardTrigger  = "<right>"
 let g:UltiSnipsJumpBackwardTrigger = "<left>"
 let g:snips_author                 = 'Strahinja Val Markovic'
@@ -816,17 +783,7 @@ let g:snips_author                 = 'Strahinja Val Markovic'
 " NOTE: To get a snippet to expand in-word (for instance, within parens), add
 " the letter "i" after the snippet header. Ex: snippet ss "std::string" i
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                               easymotion                                "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:EasyMotion_leader_key = '<leader>e'
-
-" Provides the equivalent of <leader>s, which is forwards/backwards search for a
-" character.
-" has to be 'nmap', 'noremap' doesn't work
-" Off because trying out vim-sneak
-" nmap s <Plug>(easymotion-s)
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 sneak                                   "
@@ -852,11 +809,11 @@ map T <Plug>Sneak_T
 
 " This forces vim-preview to use the default browser on linux; it already uses
 " 'open' on Mac.
-if has("unix")
-  let g:PreviewBrowsers = "xdg-open"
-endif
-
-let g:PreviewMarkdownFences = 1
+"if has("unix")
+"  let g:PreviewBrowsers = "xdg-open"
+"endif
+"
+"let g:PreviewMarkdownFences = 1
 
 " Use :Preview command to open in browser!
 
@@ -892,18 +849,6 @@ let g:lt_height = 25
 " noremap <right> :BF<cr>
 " noremap <left> :BB<cr>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              fuzzyfinder                                "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" This turns on the mrufile and mrucmd modes
-let g:fuf_modesDisable    = []
-let g:fuf_mrufile_maxItem = 1000
-let g:fuf_mrucmd_maxItem  = 400
-let g:fuf_file_exclude    = '\v\~$|\.(o|exe|dll|bak|class|meta|lock|orig|jar|swp)$|/test/data\.|(^|[/\\])\.(hg|git|bzr)($|[/\\])'
-
-" nnoremap <leader>fm :FufMruFile<CR>
-" nnoremap <leader>fc :FufMruCmd<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                fswitch                                  "
@@ -1137,6 +1082,13 @@ let g:ophigh_filetypes_to_ignore = { "spansdl": 1 }
 "nnoremap <F2> :NERDTree<cr>
 nnoremap <F2> :NERDTreeToggle<cr>
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              vim-signify                                "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"set signcolumn=yes
+" default updatetime 4000ms is not good for async update
+set updatetime=100
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                           markdown-preview                              "
@@ -1158,5 +1110,6 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              My Own  OVERRIDE                           "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" fzf sometimes has bug
 nnoremap <C-m> :bro ol<CR>
 
