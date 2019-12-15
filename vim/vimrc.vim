@@ -15,55 +15,6 @@ let work_path = $HOME . '/work/work_vim_settings.vim'
 let at_work = filereadable( work_path )
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                       ALT key map "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-function! Terminal_MetaMode(mode)
-   set ttimeout
-   if $TMUX != ''
-       set ttimeoutlen=30
-   elseif &ttimeoutlen > 80 || &ttimeoutlen <= 0
-       set ttimeoutlen=80
-   endif
-   if has('nvim') || has('gui_running')
-       return
-   endif
-   function! s:metacode(mode, key)
-       if a:mode == 0
-           exec "set <M-".a:key.">=\e".a:key
-       else
-           exec "set <M-".a:key.">=\e]{0}".a:key."~"
-       endif
-   endfunc
-   for i in range(10)
-       call s:metacode(a:mode, nr2char(char2nr('0') + i))
-   endfor
-   for i in range(26)
-       call s:metacode(a:mode, nr2char(char2nr('a') + i))
-       call s:metacode(a:mode, nr2char(char2nr('A') + i))
-   endfor
-   if a:mode != 0
-       for c in [',', '.', '/', ';', '[', ']', '{', '}']
-           call s:metacode(a:mode, c)
-       endfor
-       for c in ['?', ':', '-', '_']
-           call s:metacode(a:mode, c)
-       endfor
-   else
-       for c in [',', '.', '/', ';', '{', '}']
-           call s:metacode(a:mode, c)
-       endfor
-       for c in ['?', ':', '-', '_']
-           call s:metacode(a:mode, c)
-       endfor
-   endif
-endfunc
-
-command! -nargs=0 -bang VimMetaInit call Terminal_MetaMode(<bang>0)
-
-
-
 " Setup vim-plug
 call plug#begin('~/.vim/plugged')
 
@@ -82,7 +33,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'Raimondi/delimitMate'
 "Plug 'vim-scripts/Rename'
 Plug 'SirVer/ultisnips'
-Plug 'Valloric/ListToggle'
+" Plug 'Valloric/ListToggle'
 Plug 'Valloric/MatchTagAlways', { 'for': 'html' }
 "Plug 'Valloric/Vim-Jinja2-Syntax'
 Plug 'Valloric/vim-operator-highlight'
@@ -93,10 +44,7 @@ Plug 'vim-scripts/YankRing.vim'
 Plug 'anyakichi/vim-surround'
 " Plug 'bufkill.vim'
 "Plug 'cespare/vim-toml'
-" Has *terrible* path ranking, switching back to Command-T
-" Plug 'ctrlpvim/ctrlp.vim'
 "Plug 'dart-lang/dart-vim-plugin'
-"Plug 'gmarik/vundle'
 Plug 'godlygeek/tabular'
 " For markdown preview; call :Preview to open rendered in browser
 " Plug 'greyblake/vim-preview'
@@ -149,11 +97,6 @@ Plug 'mbbill/undotree'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'skywind3000/asyncrun.vim', {'for': ['c', 'cpp']}
 Plug 'tpope/vim-unimpaired'
-" requires compilation
-"Plug 'xolox/vim-misc'
-"Plug 'xolox/vim-notes'
-"Plug 'xolox/vim-pyref'
-"Plug 'xolox/vim-session'
 
 if !at_work
   Plug 'Shougo/echodoc.vim', {'for': ['c', 'cpp']}
@@ -883,9 +826,9 @@ endif
 "                               ListToggle                                "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:lt_location_list_toggle_map = '<leader>i'
-let g:lt_quickfix_list_toggle_map = '<leader>u'
-let g:lt_height = 25
+" let g:lt_location_list_toggle_map = '<leader>i'
+" let g:lt_quickfix_list_toggle_map = '<leader>u'
+" let g:lt_height = 25
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                bufkill                                  "
