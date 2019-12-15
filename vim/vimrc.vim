@@ -95,7 +95,6 @@ else
 endif
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-repeat'
-"Plug 'sjl/gundo.vim'
 Plug 'mbbill/undotree'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'skywind3000/asyncrun.vim', {'for': ['c', 'cpp']}
@@ -248,7 +247,7 @@ set shortmess=a
 " Look for tag def in a "tags" file in the dir of the current file, then for
 " that same file in every folder above the folder of the current file, until the
 " root.
-set tags=./tags;/
+set tags=./.tags;,.tags
 
 " turns off all error bells, visual or otherwise
 set noerrorbells visualbell t_vb=
@@ -266,7 +265,8 @@ set iskeyword+=_,$,@,%,#
 set cmdheight=2
 
 " allow backspace and cursor keys to cross line boundaries
-set whichwrap+=<,>,h,l
+"set whichwrap+=<,>,h,l
+set nowrap
 set nohlsearch          " do not highlight searched-for phrases
 set incsearch           " ...but do highlight-as-I-type the search string
 set gdefault            " this makes search/replace global by default
@@ -1112,3 +1112,17 @@ highlight Comment cterm=italic term=italic gui=italic
 highlight htmlArg cterm=italic term=italic gui=italic
 highlight xmlAttrib cterm=italic term=italic gui=italic
 
+"<F2> Nerdtree Toggle
+"<F3> TagBarFocus
+"<F4> TagBarToggle
+
+"<F5> undotree toggle
+"<F6>
+"<F7> paste
+"<F8> make
+
+"<F9>
+"<F10> quickfix toggle
+"<F11>
+"<F12>
+"
