@@ -14,6 +14,56 @@
 let work_path = $HOME . '/work/work_vim_settings.vim'
 let at_work = filereadable( work_path )
 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                       ALT key map "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+function! Terminal_MetaMode(mode)
+   set ttimeout
+   if $TMUX != ''
+       set ttimeoutlen=30
+   elseif &ttimeoutlen > 80 || &ttimeoutlen <= 0
+       set ttimeoutlen=80
+   endif
+   if has('nvim') || has('gui_running')
+       return
+   endif
+   function! s:metacode(mode, key)
+       if a:mode == 0
+           exec "set <M-".a:key.">=\e".a:key
+       else
+           exec "set <M-".a:key.">=\e]{0}".a:key."~"
+       endif
+   endfunc
+   for i in range(10)
+       call s:metacode(a:mode, nr2char(char2nr('0') + i))
+   endfor
+   for i in range(26)
+       call s:metacode(a:mode, nr2char(char2nr('a') + i))
+       call s:metacode(a:mode, nr2char(char2nr('A') + i))
+   endfor
+   if a:mode != 0
+       for c in [',', '.', '/', ';', '[', ']', '{', '}']
+           call s:metacode(a:mode, c)
+       endfor
+       for c in ['?', ':', '-', '_']
+           call s:metacode(a:mode, c)
+       endfor
+   else
+       for c in [',', '.', '/', ';', '{', '}']
+           call s:metacode(a:mode, c)
+       endfor
+       for c in ['?', ':', '-', '_']
+           call s:metacode(a:mode, c)
+       endfor
+   endif
+endfunc
+
+command! -nargs=0 -bang VimMetaInit call Terminal_MetaMode(<bang>0)
+
+
+
 " Setup vim-plug
 call plug#begin('~/.vim/plugged')
 
@@ -104,9 +154,10 @@ Plug 'skywind3000/asyncrun.vim', {'for': ['c', 'cpp']}
 "Plug 'xolox/vim-pyref'
 "Plug 'xolox/vim-session'
 
-"if !at_work
-  "Plug 'ycm-core/YouCompleteMe'
-"endif
+if !at_work
+  Plug 'Shougo/echodoc.vim'
+  Plug 'ycm-core/YouCompleteMe', {'for': ['c', 'cpp']}
+endif
 
 call plug#end()
 
@@ -653,7 +704,7 @@ noremap <leader>ft :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
 noremap <leader>fl :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
 " "let g:Lf_ShortcutB = '<m-n>'
 " noremap <c-n> :LeaderfMru<cr>
-" noremap <m-p> :LeaderfFunction!<cr>
+noremap <m-p> :LeaderfFunction!<cr>
 " noremap <m-n> :LeaderfBuffer<cr>
 " noremap <m-m> :LeaderfTag<cr>
 let g:Lf_StlSeparator = { 'left': '', 'right': '', 'font': '' }
@@ -717,6 +768,8 @@ let g:asyncrun_open = 6
 let g:asyncrun_bell = 1
 let g:asyncrun_rootmarks = ['.svn', '.git', '.root', '_darcs', 'build.xml']
 nnoremap <silent> <F8> :AsyncRun -cwd=<root> make <cr>
+nnoremap <silent> <F9> :AsyncRun g++ -Wall -O2 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)" <cr>
+nnoremap <silent> <F11> :AsyncRun -raw -cwd=$(VIM_FILEDIR) "$(VIM_FILEDIR)/$(VIM_FILENOEXT)" <cr>
 nnoremap <F10> :call asyncrun#quickfix_toggle(6)<cr>
 
 
@@ -948,9 +1001,14 @@ let g:notes_directories = ['~/notes']
 let g:ale_sign_error = '✗'
 let g:ale_sign_warning = '⚠'
 
+" let g:ale_linters_explicit = 1
+" let g:ale_completion_delay = 500
+" let g:ale_echo_delay = 20
+" let g:ale_lint_delay = 500
+
 " We turn off everything except on-save because the other options add visible
 " latency (at least for Markdown, haven't investigated further).
-let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_insert_leave = 1
 let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_save = 1
 let g:ale_c_gcc_options = '-Wall -O2 -std=c99'
@@ -1083,12 +1141,42 @@ nnoremap <F2> :NERDTreeToggle<cr>
 " default updatetime 4000ms is not good for async update
 set updatetime=100
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              echodoc                                    "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:echodoc_enable_at_startup = 1
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                           markdown-preview                              "
+"                                  YCM                                    "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " :MarkdownPreview - to open a browser tab that auto-updates
 " :MarkdownPreviewStop - to stop the bg server
+
+let g:ycm_server_python_interpreter='/usr/bin/python2'
+let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
+
+let g:ycm_add_preview_to_completeopt = 0
+let g:ycm_show_diagnostics_ui = 0
+let g:ycm_server_log_level = 'info'
+let g:ycm_min_num_identifier_candidate_chars = 2
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
+let g:ycm_complete_in_strings=1
+let g:ycm_key_invoke_completion = '<c-z>'
+set completeopt=menu,menuone
+
+"highlight PMenu ctermfg=230 ctermbg=137 guifg=black guibg=darkgrey
+"highlight PMenuSel ctermfg=202 ctermbg=153 guifg=darkgrey guibg=black
+" highlight PMenu ctermfg=0 ctermbg=80 guifg=black guibg=darkgrey
+" highlight PMenuSel ctermfg=242 ctermbg=8 guifg=darkgrey guibg=black
+
+noremap <c-z> <NOP>
+
+let g:ycm_semantic_triggers =  {
+           \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
+           \ 'cs,lua,javascript': ['re!\w{2}'],
+           \ }
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1106,6 +1194,12 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " fzf sometimes has bug
 nnoremap <C-m> :bro ol<CR>
+
+" complete quicker
+inoremap <C-]> <C-X><C-]>
+inoremap <C-F> <C-X><C-F>
+inoremap <C-D> <C-X><C-D>
+inoremap <C-L> <C-X><C-L>
 
 " make comments and HTML attributes italic
 highlight Comment cterm=italic term=italic gui=italic
@@ -1126,3 +1220,25 @@ highlight xmlAttrib cterm=italic term=italic gui=italic
 "<F11>
 "<F12>
 "
+
+nnoremap <Tab> >>
+nnoremap <S-Tab> <<
+
+" Conflict with UltiSnips
+"*****************************************************************************
+" Tab completion
+" will insert tab at beginning of line,
+" will use completion if not at beginning
+"*****************************************************************************
+set wildmode=list:longest,list:full
+function! InsertTabWrapper()
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k'
+        return "\<Tab>"
+    else
+        return "\<C-p>"
+    endif
+endfunction
+" inoremap <Tab> <C-r>=InsertTabWrapper()<CR>
+" inoremap <S-Tab> <C-n>
+
