@@ -115,7 +115,7 @@ Plug 'octol/vim-cpp-enhanced-highlight', {'for': 'cpp' }
 "Plug 'tpope/vim-markdown', {'for': 'markdown'}
 "Plug 'iamcco/markdown-preview.nvim', {'for': 'markdown'}
 Plug 'othree/html5.vim', {'for': 'html'}
-Plug 'mattn/emmet-vim', {'for': 'html'}
+Plug 'mattn/emmet-vim', {'for': ['html', 'php']}
 Plug 'skammer/vim-css-color', {'for': 'css'}
 Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
 Plug 'elzr/vim-json', {'for': 'json'}
@@ -148,6 +148,7 @@ Plug 'tpope/vim-repeat'
 Plug 'mbbill/undotree'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'skywind3000/asyncrun.vim', {'for': ['c', 'cpp']}
+Plug 'tpope/vim-unimpaired'
 " requires compilation
 "Plug 'xolox/vim-misc'
 "Plug 'xolox/vim-notes'
@@ -155,7 +156,7 @@ Plug 'skywind3000/asyncrun.vim', {'for': ['c', 'cpp']}
 "Plug 'xolox/vim-session'
 
 if !at_work
-  Plug 'Shougo/echodoc.vim'
+  Plug 'Shougo/echodoc.vim', {'for': ['c', 'cpp']}
   Plug 'ycm-core/YouCompleteMe', {'for': ['c', 'cpp']}
 endif
 
@@ -1141,6 +1142,21 @@ nnoremap <F2> :NERDTreeToggle<cr>
 " default updatetime 4000ms is not good for async update
 set updatetime=100
 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              emmet-vim                                "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:user_emmet_settings = {
+\  'php' : {
+\    'extends' : 'html',
+\    'filters' : 'c',
+\  },
+\  'xml' : {
+\    'extends' : 'html',
+\  },
+\}
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              echodoc                                    "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1223,6 +1239,13 @@ highlight xmlAttrib cterm=italic term=italic gui=italic
 
 nnoremap <Tab> >>
 nnoremap <S-Tab> <<
+
+nnoremap gb :ls<CR>:b<Space>
+
+"set path=.,**
+
+
+
 
 " Conflict with UltiSnips
 "*****************************************************************************
