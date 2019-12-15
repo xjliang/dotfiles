@@ -25,7 +25,6 @@ call plug#begin('~/.vim/plugged')
 " the plugin's Plugin command.
 
 Plug 'vim-scripts/FSwitch', {'for': ['c', 'cpp']}
-"Plug 'vim-scripts/FuzzyFinder'
 "Plug 'JesseKPhillips/d.vim'
 Plug 'vim-scripts/L9'
 Plug 'vim-airline/vim-airline-themes'
@@ -52,11 +51,6 @@ Plug 'godlygeek/tabular'
 " For markdown preview; call :Preview to open rendered in browser
 " Plug 'greyblake/vim-preview'
 "Plug 'groenewege/vim-less'
-"Plug '~/.fzf'
-" Requires fzf installed in ~/.fzf
-" Also works nicer if 'bat' is installed (for file preview syntax highlight)
-" See our zshrc for our fzf default options
-"Plug 'junegunn/fzf.vim'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'justinmk/vim-sneak'
 Plug 'honza/vim-snippets'
@@ -1106,10 +1100,15 @@ if at_work
   exec 'source ' . work_path
 endif
 
-
+" TODO: cleanup
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              My Own  OVERRIDE                           "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " fzf sometimes has bug
 nnoremap <C-m> :bro ol<CR>
+
+" make comments and HTML attributes italic
+highlight Comment cterm=italic term=italic gui=italic
+highlight htmlArg cterm=italic term=italic gui=italic
+highlight xmlAttrib cterm=italic term=italic gui=italic
 
