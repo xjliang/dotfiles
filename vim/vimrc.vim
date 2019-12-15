@@ -15,6 +15,50 @@ let work_path = $HOME . '/work/work_vim_settings.vim'
 let at_work = filereadable( work_path )
 
 
+function! Terminal_MetaMode(mode)
+    set ttimeout
+    if $TMUX != ''
+        set ttimeoutlen=30
+    elseif &ttimeoutlen > 80 || &ttimeoutlen <= 0
+        set ttimeoutlen=80
+    endif
+    if has('nvim') || has('gui_running')
+        return
+    endif
+    function! s:metacode(mode, key)
+        if a:mode == 0
+            exec "set <M-".a:key.">=\e".a:key
+        else
+            exec "set <M-".a:key.">=\e]{0}".a:key."~"
+        endif
+    endfunc
+    for i in range(10)
+        call s:metacode(a:mode, nr2char(char2nr('0') + i))
+    endfor
+    for i in range(26)
+        call s:metacode(a:mode, nr2char(char2nr('a') + i))
+        call s:metacode(a:mode, nr2char(char2nr('A') + i))
+    endfor
+    if a:mode != 0
+        for c in [',', '.', '/', ';', '[', ']', '{', '}']
+            call s:metacode(a:mode, c)
+        endfor
+        for c in ['?', ':', '-', '_']
+            call s:metacode(a:mode, c)
+        endfor
+    else
+        for c in [',', '.', '/', ';', '{', '}']
+            call s:metacode(a:mode, c)
+        endfor
+        for c in ['?', ':', '-', '_']
+            call s:metacode(a:mode, c)
+        endfor
+    endif
+endfunc
+
+call Terminal_MetaMode(0)
+
+
 " Setup vim-plug
 call plug#begin('~/.vim/plugged')
 
@@ -39,7 +83,7 @@ Plug 'Valloric/MatchTagAlways', { 'for': 'html' }
 Plug 'Valloric/vim-operator-highlight'
 Plug 'Valloric/vim-valloric-colorscheme'
 "Plug 'Valloric/xmledit'
-Plug 'vim-scripts/YankRing.vim'
+"Plug 'vim-scripts/YankRing.vim'
 " Seems more active than tpope/vim-surround
 Plug 'anyakichi/vim-surround'
 " Plug 'bufkill.vim'
@@ -50,11 +94,11 @@ Plug 'godlygeek/tabular'
 " Plug 'greyblake/vim-preview'
 "Plug 'groenewege/vim-less'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-Plug 'justinmk/vim-sneak'
+"Plug 'justinmk/vim-sneak'
 Plug 'honza/vim-snippets'
 " Yet another markdown preview plugin
 " After install, needs: mkdp#util#install()
-Plug 'majutsushi/tagbar'
+"Plug 'majutsushi/tagbar'
 Plug 'vim-scripts/matchit.zip'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'mileszs/ack.vim'
@@ -75,7 +119,7 @@ Plug 'vim-scripts/python_match.vim', {'for': 'python'}
 "Plug 'rust-lang/rust.vim'
 " No async support? Using ALE now.
 Plug 'dense-analysis/ale', {'for': ['c', 'cpp', 'python']}
-Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
+"Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
 " Problems with fugitive, re-evalute when upstream fixes the issue
 " Plug 'sjl/splice.vim'
 " Requires extra binaries; see docs
@@ -94,6 +138,8 @@ endif
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-repeat'
 Plug 'mbbill/undotree'
+Plug 'justinmk/vim-dirvish'
+Plug 'tpope/vim-vinegar'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'skywind3000/asyncrun.vim', {'for': ['c', 'cpp']}
 Plug 'tpope/vim-unimpaired'
@@ -592,17 +638,13 @@ noremap <leader>q :qa<cr>
 
 " key bindings for quickly moving between windows
 " h left, l right, k up, j down
-noremap <leader>h <c-w>h
-noremap <leader>l <c-w>l
-noremap <leader>k <c-w>k
-noremap <leader>j <c-w>j
+noremap <Tab>h <c-w>h
+noremap <Tab>l <c-w>l
+noremap <Tab>k <c-w>k
+noremap <Tab>j <c-w>j
 
 " for faster scrolling
 " TODO: create a command for scrolling by ~70% of the window height
-noremap <m-j> 15gj
-noremap <m-k> 15gk
-
-" on macs the alt key is inconvenient to press, so let's also map to ctrl
 noremap <c-j> 15gj
 noremap <c-k> 15gk
 
@@ -644,16 +686,12 @@ noremap <leader>f <c-i>
 "                               LeaderF                                   "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:Lf_ShortcutF = "<leader>ff"
-noremap <leader>fb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
-noremap <leader>fm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
-noremap <leader>ft :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
-noremap <leader>fl :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
-" "let g:Lf_ShortcutB = '<m-n>'
-" noremap <c-n> :LeaderfMru<cr>
+let g:Lf_ShortcutF = '<c-p>'
+let g:Lf_ShortcutB = '<m-n>'
+noremap <c-n> :LeaderfMru<cr>
 noremap <m-p> :LeaderfFunction!<cr>
-" noremap <m-n> :LeaderfBuffer<cr>
-" noremap <m-m> :LeaderfTag<cr>
+noremap <m-n> :LeaderfBuffer<cr>
+noremap <m-m> :LeaderfTag<cr>
 let g:Lf_StlSeparator = { 'left': '', 'right': '', 'font': '' }
 
 let g:Lf_RootMarkers = ['.project', '.root', '.svn', '.git']
@@ -685,7 +723,7 @@ let g:Lf_PreviewResult = {'Function':0, 'BufTag':0}
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " f5 toggles the Gundo plugin window
-nnoremap <F5> :UndotreeToggle<CR>
+nnoremap <F4> :UndotreeToggle<CR>
 let g:undotree_width=80
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -715,7 +753,7 @@ let g:asyncrun_open = 6
 let g:asyncrun_bell = 1
 let g:asyncrun_rootmarks = ['.svn', '.git', '.root', '_darcs', 'build.xml']
 nnoremap <silent> <F8> :AsyncRun -cwd=<root> make <cr>
-nnoremap <silent> <F9> :AsyncRun g++ -Wall -O2 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)" <cr>
+nnoremap <silent> <F5> :AsyncRun g++ -Wall -O2 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)" <cr>
 nnoremap <silent> <F11> :AsyncRun -raw -cwd=$(VIM_FILEDIR) "$(VIM_FILEDIR)/$(VIM_FILENOEXT)" <cr>
 nnoremap <F10> :call asyncrun#quickfix_toggle(6)<cr>
 
@@ -724,18 +762,18 @@ nnoremap <F10> :call asyncrun#quickfix_toggle(6)<cr>
 "                                yankring                                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:yankring_history_dir = '$HOME/tmp/vim'
-" this is so that single char deletes don't end up in the yankring
-let g:yankring_min_element_length = 2
-let g:yankring_window_height = 14
-nnoremap <leader>r :YRShow<CR>
-
-" this makes Y yank from the cursor to the end of the line, which makes more
-" sense than the default of yanking the whole current line (we can use yy for
-" that)
-fun! YRRunAfterMaps()
-  nnoremap Y :<C-U>YRYankCount 'y$'<CR>
-endfunction
+"let g:yankring_history_dir = '$HOME/tmp/vim'
+"" this is so that single char deletes don't end up in the yankring
+"let g:yankring_min_element_length = 2
+"let g:yankring_window_height = 14
+"nnoremap <leader>r :YRShow<CR>
+"
+"" this makes Y yank from the cursor to the end of the line, which makes more
+"" sense than the default of yanking the whole current line (we can use yy for
+"" that)
+"fun! YRRunAfterMaps()
+"  nnoremap Y :<C-U>YRYankCount 'y$'<CR>
+"endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                session                                  "
@@ -767,9 +805,9 @@ vnoremap <leader>a, :Tabularize /,/l0r1<CR>
 
 " we can't use <tab> as our snippet key since we use that with YouCompleteMe
 let g:UltiSnipsSnippetsDir         = $HOME . '/dotfiles/vim/UltiSnips'
-"let g:UltiSnipsExpandTrigger       = "<m-s>"
+let g:UltiSnipsExpandTrigger       = "<m-s>"
 let g:UltiSnipsExpandTrigger       = "<tab>"
-"let g:UltiSnipsListSnippets        = "<c-m-s>"
+let g:UltiSnipsListSnippets        = "<c-m-s>"
 let g:UltiSnipsJumpForwardTrigger  = "<right>"
 let g:UltiSnipsJumpBackwardTrigger = "<left>"
 let g:snips_author                 = 'Strahinja Val Markovic'
@@ -777,25 +815,6 @@ let g:snips_author                 = 'Strahinja Val Markovic'
 " NOTE: To get a snippet to expand in-word (for instance, within parens), add
 " the letter "i" after the snippet header. Ex: snippet ss "std::string" i
 
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                 sneak                                   "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" s<char><char> jumps to first instance of '<char><char>' and labels others.
-" S<char>char> is reverse search
-" <tab> labels the next set of matches (if they're unlabeled).
-let g:sneak#label = 1
-let g:sneak#s_next = 1
-
-" Enables single-char sneak with f, F etc. Does NOT invoke label mode; repeat
-" f to move forward, F to move back. Simial for t/T.
-" Needs plain 'map' commands to work.
-map f <Plug>Sneak_f
-map F <Plug>Sneak_F
-map t <Plug>Sneak_t
-map T <Plug>Sneak_T
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              vim-preview                                "
@@ -824,14 +843,6 @@ elseif executable('ack-grep')
 elseif executable('ack')
   let g:ackprg = "ack --nocolor --nogroup --column"
 endif
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                               ListToggle                                "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" let g:lt_location_list_toggle_map = '<leader>i'
-" let g:lt_quickfix_list_toggle_map = '<leader>u'
-" let g:lt_height = 25
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                bufkill                                  "
@@ -891,25 +902,17 @@ au vimrc FileType gitcommit setlocal spell! spelllang=en_us
 "                                tagbar                                   "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:tagbar_left = 1
-let g:tagbar_sort = 0
-let g:tagbar_width = 60
-let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
+"let g:tagbar_left = 1
+"let g:tagbar_sort = 0
+"let g:tagbar_width = 60
+"let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
 
 " *OpenAutoClose is meant to be used for the usecase of 'open Tagbar, move
 " cursor there, move to entry, press enter, close window'. Differs from the
 " *Toggle version by moving the cursor to the window and closing the window once
 " an entry is selected.
-nnoremap <F3> :TagbarOpenAutoClose<cr>
-nnoremap <F4> :TagbarToggle<cr><c-w>=
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                               vimpager                                  "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" vimpager is actually not a plugin but a shell file
-" https://github.com/rkitover/vimpager
-let vimpager_use_gvim = 1
+"nnoremap <F3> :TagbarOpenAutoClose<cr>
+"nnoremap <F4> :TagbarToggle<cr><c-w>=
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                               delimitMate                               "
@@ -923,20 +926,6 @@ au vimrc FileType html,xhtml,markdown let b:delimitMate_matchpairs = "(:),[:],{:
 
 let g:cssColorVimDoNotMessMyUpdatetime = 1
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              zencoding-vim                              "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-let g:user_zen_leader_key = '<c-b>'
-let g:user_zen_settings = {
-      \  'indentation' : '  '
-      \}
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                vim-notes                                "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-let g:notes_directories = ['~/notes']
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                  ALE                                    "
@@ -985,14 +974,10 @@ let g:ale_python_flake8_options = '--max-line-length=80 ' .
 "                              YouCompleteMe                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-"let g:ycm_autoclose_preview_window_after_completion = 1
-"let g:ycm_min_num_identifier_candidate_chars = 4
-"let g:ycm_extra_conf_globlist = ['~/repos/*']
-"let g:ycm_filetype_specific_completion_to_disable = {'javascript': 1}
-"let g:ycm_rust_src_path = $HOME . '/repos/rust/src'
+"let g:ycm_server_python_interpreter='/usr/bin/python2'
+"let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
 "
-"" Also see the 'pumheight' vim option!
-"let g:ycm_max_num_identifier_candidates = 10
+"
 "let g:ycm_clangd_uses_ycmd_caching = 1
 "
 "let g:ycm_filetype_blacklist = {
@@ -1079,7 +1064,24 @@ let g:ophigh_filetypes_to_ignore = { "spansdl": 1 }
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 "nnoremap <F2> :NERDTree<cr>
-nnoremap <F2> :NERDTreeToggle<cr>
+"nnoremap <F2> :NERDTreeToggle<cr>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                            vim-derish                                   "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" nnoremap <Tab>7
+" nnoremap <Tab>8
+" nnoremap <Tab>9
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                            vim-vinegar                                   "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+noremap <silent><tab>6 :VinegarOpen leftabove vs<cr>
+noremap <silent><tab>7 :VinegarOpen vs<cr>
+noremap <silent><tab>8 :VinegarOpen belowright sp<cr>
+noremap <silent><tab>9 :VinegarOpen tabedit<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              vim-signify                                "
@@ -1110,35 +1112,35 @@ let g:user_emmet_settings = {
 let g:echodoc_enable_at_startup = 1
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                  YCM                                    "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" :MarkdownPreview - to open a browser tab that auto-updates
-" :MarkdownPreviewStop - to stop the bg server
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                           YouCompleteMe                                "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ycm_server_python_interpreter='/usr/bin/python2'
 let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
 
 let g:ycm_add_preview_to_completeopt = 0
 let g:ycm_show_diagnostics_ui = 0
 let g:ycm_server_log_level = 'info'
-let g:ycm_min_num_identifier_candidate_chars = 2
+let g:ycm_min_num_identifier_candidate_chars = 4
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
-let g:ycm_complete_in_strings=1
+
+" Also see the 'pumheight' vim option!
+let g:ycm_max_num_identifier_candidates = 10
+let g:ycm_complete_in_strings = 1
 let g:ycm_key_invoke_completion = '<c-z>'
 set completeopt=menu,menuone
-
-"highlight PMenu ctermfg=230 ctermbg=137 guifg=black guibg=darkgrey
-"highlight PMenuSel ctermfg=202 ctermbg=153 guifg=darkgrey guibg=black
-" highlight PMenu ctermfg=0 ctermbg=80 guifg=black guibg=darkgrey
-" highlight PMenuSel ctermfg=242 ctermbg=8 guifg=darkgrey guibg=black
 
 noremap <c-z> <NOP>
 
 let g:ycm_semantic_triggers =  {
-           \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
-           \ 'cs,lua,javascript': ['re!\w{2}'],
+           \ 'c,cpp,python,java,perl': ['re!\w{2}'],
+           \ 'lua,javascript': ['re!\w{2}'],
            \ }
+
+nnoremap <leader>y :YcmForceCompileAndDiagnostics<cr>
+nnoremap <leader>g :YcmCompleter GoTo<CR>
+nnoremap <leader>pd :YcmCompleter GoToDefinition<CR>
+nnoremap <leader>pc :YcmCompleter GoToDeclaration<CR>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1168,16 +1170,16 @@ highlight Comment cterm=italic term=italic gui=italic
 highlight htmlArg cterm=italic term=italic gui=italic
 highlight xmlAttrib cterm=italic term=italic gui=italic
 
-"<F2> Nerdtree Toggle
-"<F3> TagBarFocus
-"<F4> TagBarToggle
+"<F2>
+"<F3>
+"<F4> undotree toggle
 
-"<F5> undotree toggle
+"<F5> run program
 "<F6>
 "<F7> paste
 "<F8> make
 
-"<F9>
+"<F9> compile cpp
 "<F10> quickfix toggle
 "<F11>
 "<F12>
