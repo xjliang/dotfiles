@@ -146,8 +146,8 @@ set spellfile=$HOME/dotfiles/vim/spell/en.latin1.add
 
 " DISPLAY SETTINGS
 set t_Co=256   " This is may or may not needed.
-" colorscheme PaperColor
-colorscheme valloric    " sets the colorscheme
+colorscheme PaperColor
+" colorscheme valloric    " sets the colorscheme
 set background=dark     " enable for dark terminals
 set scrolloff=2         " 2 lines above/below cursor when scrolling
 set showmatch           " show matching bracket (briefly jump)
