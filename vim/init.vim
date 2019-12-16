@@ -603,7 +603,7 @@ let g:cssColorVimDoNotMessMyUpdatetime = 1
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                  ALE                                    "
+"                                 ALE                                    "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Unlike syntastic, ALE supports async linting.
