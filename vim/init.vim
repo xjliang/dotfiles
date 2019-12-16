@@ -1,148 +1,98 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Last modification: Sat Dec 14 22:09:59 DST 2019
+"*****************************************************************************
+" Last modification: Tue Dec 17 00:22:52 DST 2019
 "
 " Guided by vim-bootstrap: https://github.com/avelino/vim-bootstrap
 " Change your ~/.vimrc as follows:
 "   set runtimepath+=<path to this repository>
 "   source <path to this repository>/vimrc
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"*****************************************************************************
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                preamble                                 "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"*****************************************************************************
+"" preamble
+"*****************************************************************************
 
 let work_path = $HOME . '/work/work_vim_settings.vim'
 let at_work = filereadable( work_path )
 
+"*****************************************************************************
+"" Vim-PLug core
+"*****************************************************************************
+let vimplug_exists=expand('~/.vim/autoload/plug.vim')
 
-function! Terminal_MetaMode(mode)
-    set ttimeout
-    if $TMUX != ''
-        set ttimeoutlen=30
-    elseif &ttimeoutlen > 80 || &ttimeoutlen <= 0
-        set ttimeoutlen=80
-    endif
-    if has('nvim') || has('gui_running')
-        return
-    endif
-    function! s:metacode(mode, key)
-        if a:mode == 0
-            exec "set <M-".a:key.">=\e".a:key
-        else
-            exec "set <M-".a:key.">=\e]{0}".a:key."~"
-        endif
-    endfunc
-    for i in range(10)
-        call s:metacode(a:mode, nr2char(char2nr('0') + i))
-    endfor
-    for i in range(26)
-        call s:metacode(a:mode, nr2char(char2nr('a') + i))
-        call s:metacode(a:mode, nr2char(char2nr('A') + i))
-    endfor
-    if a:mode != 0
-        for c in [',', '.', '/', ';', '[', ']', '{', '}']
-            call s:metacode(a:mode, c)
-        endfor
-        for c in ['?', ':', '-', '_']
-            call s:metacode(a:mode, c)
-        endfor
-    else
-        for c in [',', '.', '/', ';', '{', '}']
-            call s:metacode(a:mode, c)
-        endfor
-        for c in ['?', ':', '-', '_']
-            call s:metacode(a:mode, c)
-        endfor
-    endif
-endfunc
+let g:vim_bootstrap_langs = "c,haskell,html,javascript,lua,perl,php,python"
+let g:vim_bootstrap_editor = "vim"				" nvim or vim
 
-call Terminal_MetaMode(0)
+if !filereadable(vimplug_exists)
+  if !executable("curl")
+    echoerr "You have to install curl or first install vim-plug yourself!"
+    execute "q!"
+  endif
+  echo "Installing Vim-Plug..."
+  echo ""
+  silent exec "!\curl -fLo " . vimplug_exists . " --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+  let g:not_finish_vimplug = "yes"
 
+  autocmd VimEnter * PlugInstall
+endif
 
-" Setup vim-plug
-call plug#begin('~/.vim/plugged')
+" Required:
+call plug#begin(expand('~/.vim/plugged'))
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                          Vundle configuration                           "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" These need to come before the configuration options for the plugins since
-" vundle will add the plugin folders to the runtimepath only after it has seen
-" the plugin's Plugin command.
-
-Plug 'vim-scripts/FSwitch', {'for': ['c', 'cpp']}
-"Plug 'JesseKPhillips/d.vim'
-Plug 'vim-scripts/L9'
+"*****************************************************************************
+"" Plug install packages
+"*****************************************************************************
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-airline/vim-airline'
+
 Plug 'Raimondi/delimitMate'
-"Plug 'vim-scripts/Rename'
-Plug 'SirVer/ultisnips'
-" Plug 'Valloric/ListToggle'
-Plug 'Valloric/MatchTagAlways', { 'for': 'html' }
-"Plug 'Valloric/Vim-Jinja2-Syntax'
-Plug 'Valloric/vim-operator-highlight'
-Plug 'Valloric/vim-valloric-colorscheme'
-"Plug 'Valloric/xmledit'
-"Plug 'vim-scripts/YankRing.vim'
-" Seems more active than tpope/vim-surround
 Plug 'anyakichi/vim-surround'
-" Plug 'bufkill.vim'
-"Plug 'cespare/vim-toml'
-"Plug 'dart-lang/dart-vim-plugin'
-Plug 'godlygeek/tabular'
-" For markdown preview; call :Preview to open rendered in browser
-" Plug 'greyblake/vim-preview'
-"Plug 'groenewege/vim-less'
-Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-"Plug 'justinmk/vim-sneak'
-Plug 'honza/vim-snippets'
-" Yet another markdown preview plugin
-" After install, needs: mkdp#util#install()
-"Plug 'majutsushi/tagbar'
-Plug 'vim-scripts/matchit.zip'
+Plug 'Valloric/MatchTagAlways', { 'for': 'html' }
 Plug 'michaeljsmith/vim-indent-object'
+Plug 'godlygeek/tabular'
+Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+Plug 'vim-scripts/matchit.zip'
 Plug 'mileszs/ack.vim'
-Plug 'octol/vim-cpp-enhanced-highlight', {'for': 'cpp' }
-"Plug 'othree/eregex.vim'
-"Plug 'tpope/vim-markdown', {'for': 'markdown'}
-"Plug 'iamcco/markdown-preview.nvim', {'for': 'markdown'}
-Plug 'othree/html5.vim', {'for': 'html'}
-Plug 'mattn/emmet-vim', {'for': ['html', 'php']}
-Plug 'skammer/vim-css-color', {'for': 'css'}
-Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
-Plug 'elzr/vim-json', {'for': 'json'}
-Plug 'Valloric/python-indent', {'for': 'python'}
-Plug 'vim-scripts/python.vim', {'for': 'python'}
-Plug 'vim-scripts/python_match.vim', {'for': 'python'}
-"Plug 'prabirshrestha/async.vim'
-"Plug 'prabirshrestha/vim-lsp'
-"Plug 'rust-lang/rust.vim'
-" No async support? Using ALE now.
 Plug 'dense-analysis/ale', {'for': ['c', 'cpp', 'python']}
-"Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
-" Problems with fugitive, re-evalute when upstream fixes the issue
-" Plug 'sjl/splice.vim'
-" Requires extra binaries; see docs
-" Plug 'suan/vim-instant-markdown'
-" For higlighting the word under the cursor
-"Plug 't9md/vim-quickhl'
+Plug 'vim-scripts/FSwitch', {'for': ['c', 'cpp']}
 Plug 'tomtom/tcomment_vim'
-" Plug 'tomtom/tlib_vim'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-unimpaired'
+Plug 'vim-scripts/YankRing.vim'
+Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
+
+Plug 'tpope/vim-git'
 Plug 'tpope/vim-fugitive'
-"Plug 'airblade/vim-gitgutter'
 if has('nvim') || has('patch-8.0.902')
   Plug 'mhinz/vim-signify'
 else
   Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
 endif
-Plug 'tpope/vim-git'
-Plug 'tpope/vim-repeat'
-Plug 'mbbill/undotree'
+
+
+"" File explore
 Plug 'justinmk/vim-dirvish'
 Plug 'tpope/vim-vinegar'
+
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'skywind3000/asyncrun.vim', {'for': ['c', 'cpp']}
-Plug 'tpope/vim-unimpaired'
+
+"" Snippets
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+
+"Plug 'Valloric/vim-operator-highlight'
+"Plug 'Valloric/vim-valloric-colorscheme'
+
+"Plug 'octol/vim-cpp-enhanced-highlight', {'for': 'cpp' }
+Plug 'othree/html5.vim', {'for': 'html', 'on': []}
+Plug 'mattn/emmet-vim', {'for': ['html', 'php']}
+Plug 'skammer/vim-css-color', {'for': 'css', 'on': []}
+Plug 'hail2u/vim-css3-syntax', {'for': 'css', 'on': []}
+Plug 'elzr/vim-json', {'for': 'json'}
+Plug 'Valloric/python-indent', {'for': 'python'}
+Plug 'vim-scripts/python.vim', {'for': 'python'}
+Plug 'vim-scripts/python_match.vim', {'for': 'python'}
+
 
 if !at_work
   Plug 'Shougo/echodoc.vim', {'for': ['c', 'cpp']}
@@ -151,12 +101,13 @@ endif
 
 call plug#end()
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                           pre-filetype tweaks                           "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+augroup load_html
+    autocmd!
+    autocmd InsertEnter * call plug#load('html5.vim') | autocmd! load_html
+    autocmd InsertEnter * call plug#load('vim-css3-syntax') | autocmd! load_html
+    autocmd InsertEnter * call plug#load('vim-css-color') | autocmd! load_html
+augroup END
 
-" these are for the xmledit plugin
-let xml_use_xhtml = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                           reset vimrc augroup                           "
@@ -188,11 +139,10 @@ set rtp+=$HOME/dotfiles/vim
 " We want our cross-machine spell file to be used
 set spellfile=$HOME/dotfiles/vim/spell/en.latin1.add
 
-" TODO: transfer all our custom mapping to our vim_shortcuts file
-
 " DISPLAY SETTINGS
 set t_Co=256   " This is may or may not needed.
 colorscheme PaperColor
+" colorscheme peaksea
 " colorscheme valloric    " sets the colorscheme
 set background=dark     " enable for dark terminals
 set scrolloff=2         " 2 lines above/below cursor when scrolling
@@ -203,8 +153,9 @@ set showcmd             " show typed command in status bar
 set ruler               " show cursor position in status bar
 set title               " show file in titlebar
 set undofile            " stores undo state even when files are closed (in undodir)
-set cursorline          " highlights the current line
+set nocursorline          " highlights the current line
 set winaltkeys=no       " turns of the Alt key bindings to the gui menu
+set splitright
 
 " When you type the first tab, it will complete as much as possible, the second
 " tab hit will provide a list, the third and subsequent tabs will cycle through
@@ -284,8 +235,8 @@ let g:is_posix = 1
 set shortmess=a
 
 " this solves the "unable to open swap file" errors on Win7
-"set dir=~/tmp,/var/tmp,/tmp,$TEMP
-"set undodir=~/tmp,/var/tmp,/tmp,$TEMP
+set dir=~/tmp,/var/tmp,/tmp,$TEMP
+set undodir=~/tmp,/var/tmp,/tmp,$TEMP
 
 " Look for tag def in a "tags" file in the dir of the current file, then for
 " that same file in every folder above the folder of the current file, until the
@@ -310,7 +261,7 @@ set cmdheight=2
 " allow backspace and cursor keys to cross line boundaries
 "set whichwrap+=<,>,h,l
 set nowrap
-set nohlsearch          " do not highlight searched-for phrases
+set hlsearch          " do not highlight searched-for phrases
 set incsearch           " ...but do highlight-as-I-type the search string
 set gdefault            " this makes search/replace global by default
 
@@ -459,67 +410,11 @@ elseif has("gui_win32")
   set guifont=Consolas\ For\ Powerline:h14
 end
 
-" For neovim-gtk
-if exists('g:GtkGuiLoaded')
-  " Disable the ugly custom completion menu
-  call rpcnotify(1, 'Gui', 'Option', 'Popupmenu', 0)
-endif
-
 " Sometimes, $MYVIMRC does not get set even though the vimrc is sourced
 " properly. So far, I've only seen this on Linux machines on rare occasions.
 if has("unix") && strlen($MYVIMRC) < 1
   let $MYVIMRC=$HOME . '/.vimrc'
 endif
-
-" Highlight Class and Function names
-fun! s:HighlightFunctionsAndClasses()
-  syn match cCustomFunc      "\w\+\s*\((\)\@="
-  syn match cCustomClass     "\w\+\s*\(::\)\@="
-
-  hi def link cCustomFunc      Function
-  hi def link cCustomClass     Function
-endfunction
-
-" Highlight Class and Function names, D specific
-fun! s:HighlightDFunctionsAndClasses()
-  syn match cCustomDFunc     "\w\+\s*\(!.\{-}(\)\@="
-  syn match cCustomDFuncUFCS ".\w\+\s*\(!.\{-}\)\@="
-
-  hi def link cCustomDFunc     Function
-  hi def link cCustomDFuncUFCS Function
-endfunction
-
-" TODO: this should:
-" a) not be called for every filetype
-" b) be in a separate plugin
-au vimrc Syntax * call s:HighlightFunctionsAndClasses()
-au vimrc Syntax d call s:HighlightDFunctionsAndClasses()
-
-
-" TODO: split this into separate plugin
-fun! VisualSearch(direction) range
-    let l:saved_reg = @"
-    execute "normal! vgvy"
-
-    let l:pattern = escape(@", '\\/.*$^~[]')
-    let l:pattern = substitute(l:pattern, "\n$", "", "")
-
-    if a:direction == 'b'
-        execute "normal ?" . l:pattern . "^M"
-    elseif a:direction == 'gv'
-        execute "Ack " . l:pattern . ' %'
-    elseif a:direction == 'f'
-        execute "normal /" . l:pattern . "^M"
-    endif
-
-    let @/ = l:pattern
-    let @" = l:saved_reg
-endfunction
-
-"Basically you press * or # to search for the current selection
-vnoremap <silent> * :call VisualSearch('f')<CR>
-vnoremap <silent> # :call VisualSearch('b')<CR>
-vnoremap <silent> gv :call VisualSearch('gv')<CR>
 
 " cindent is a bit too smart for its own good and triggers in text files when
 " you're typing inside parens and then hit enter; it aligns the text with the
@@ -531,152 +426,6 @@ au vimrc FileType markdown setlocal spell! spelllang=en_us
 " Open epub files as if they were zip files (because they are)
 au vimrc BufReadCmd *.epub call zip#Browse( expand( "<amatch>" ) )
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                            custom mappings                              "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" NOTE: a lot of these mappings won't make sense until you realize I'm using a
-" "Dvorak-Qwerty Command" layout (and similar on Win/Lin). The layout is Dvorak
-" unless you hold down Ctrl or Alt or Cmd; then it changes to Qwerty. This type
-" of layout gives us Dvorak typing but Qwerty keyboard shortcuts.
-
-" our <leader> will be the space key
-let mapleader=" "
-
-" our <localleader> will be the '-' key
-let maplocalleader="-"
-
-" this makes vim's regex engine "not stupid"
-" see :h magic
-nnoremap / /\v
-vnoremap / /\v
-
-" With this map, we can select some text in visual mode and by invoking the map,
-" have the selection automatically filled in as the search text and the cursor
-" placed in the position for typing the replacement text. Also, this will ask
-" for confirmation before it replaces any instance of the search text in the
-" file.
-" NOTE: We're using %S here instead of %s; the capital S version comes from the
-" eregex.vim plugin and uses Perl-style regular expressions.
-" NOTE: `/cm` means: c for confirm match, m for multiline regex. For details,
-" see :h eregex-option
-vnoremap <C-r> "hy:%S/<C-r>h//cm<left><left><left>
-
-" Fast saving
-nnoremap <leader>w :w!<cr>
-
-" <leader>v brings up .vimrc
-" <leader>V reloads it and makes all changes active (file has to be saved first)
-noremap <leader>v :e! $MYVIMRC<CR>
-noremap <silent> <leader>V :source $MYVIMRC<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
-
-" with this, we can now type ",." to exit out of insert mode
-" if we really wanted to type ",.", then just type one char, wait half a sec,
-" type another
-inoremap ,. <Esc>
-vnoremap ,. <Esc>
-
-" CTRL-U and CTRL-W in insert mode cannot be undone.  Use CTRL-G u to first
-" break undo, so that we can undo those changes after inserting a line break.
-" For more info, see: http://vim.wikia.com/wiki/Recover_from_accidental_Ctrl-U
-inoremap <c-u> <c-g>u<c-u>
-inoremap <c-w> <c-g>u<c-w>
-
-" This command will allow us to save a file we don't have permission to save
-" *after* we have already opened it. Super useful.
-cnoremap w!! w !sudo tee % >/dev/null
-
-" Swap implementations of ` and ' jump to markers
-" By default, ' jumps to the marked line, ` jumps to the marked line and
-" column, so swap them
-nnoremap ' `
-nnoremap ` '
-
-" These create newlines like o and O but stay in normal mode
-nnoremap <silent> zj o<Esc>k
-nnoremap <silent> zk O<Esc>j
-
-" Now we don't have to move our fingers so far when we want to scroll through
-" the command history; also, don't forget the q: command (see :h q: for more
-" info)
-cnoremap <c-j> <down>
-cnoremap <c-k> <up>
-
-" Keep search matches in the middle of the window.
-" zz centers the screen on the cursor, zv unfolds any fold if the cursor
-" suddenly appears inside a fold.
-nnoremap * *zzzv
-nnoremap # #zzzv
-nnoremap n nzzzv
-nnoremap N Nzzzv
-
-" Also center the screen when jumping through the changelist
-nnoremap g; g;zz
-nnoremap g, g,zz
-
-" In normal mode, we use : much more often than ; so lets swap them.
-" WARNING: this will cause any "ordinary" map command without the "nore" prefix
-" that uses ":" to fail. For instance, "map <f2> :w" would fail, since vim will
-" read ":w" as ";w" because of the below remappings. Use "noremap"s in such
-" situations and you'll be fine.
-nnoremap ; :
-nnoremap : ;
-vnoremap ; :
-vnoremap : ;
-
-" This makes j and k work on "screen lines" instead of on "file lines"; now, when
-" we have a long line that wraps to multiple screen lines, j and k behave as we
-" expect them to.
-nnoremap j gj
-nnoremap k gk
-
-" Use Q for formatting the current paragraph (or visual selection)
-vnoremap Q gq
-nnoremap Q gqap
-
-" This is quit all
-noremap <leader>q :qa<cr>
-
-" key bindings for quickly moving between windows
-" h left, l right, k up, j down
-noremap <Tab>h <c-w>h
-noremap <Tab>l <c-w>l
-noremap <Tab>k <c-w>k
-noremap <Tab>j <c-w>j
-
-" for faster scrolling
-" TODO: create a command for scrolling by ~70% of the window height
-noremap <c-j> 15gj
-noremap <c-k> 15gk
-
-" Switches to the previous buffer that was shown in the current window, but also
-" closes the current buffer before switching to the previous one
-" noremap <leader>bq <c-^> :bd #<cr>
-
-" Switch to the directory of the open buffer
-noremap <leader>cd :cd %:p:h<cr>
-
-" Toggle and untoggle spell checking
-noremap <leader>ss :setlocal spell! spelllang=en_us<cr>
-
-" spelling shortcuts using <leader>
-" ]s next misspelled word
-" [s previous misspelled word
-" zg add to dict
-" z= get suggestions
-noremap <leader>sn ]s
-noremap <leader>sp [s
-noremap <leader>sa zg
-noremap <leader>su z=
-
-" Using '<' and '>' in visual mode to shift code by a tab-width left/right by
-" default exits visual mode. With this mapping we remain in visual mode after
-" such an operation.
-vnoremap < <gv
-vnoremap > >gv
-
-noremap <leader>b <c-o>
-noremap <leader>f <c-i>
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                       ***  HERE BE PLUGINS  ***                         "
@@ -686,12 +435,10 @@ noremap <leader>f <c-i>
 "                               LeaderF                                   "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:Lf_ShortcutF = '<c-p>'
-let g:Lf_ShortcutB = '<m-n>'
-noremap <c-n> :LeaderfMru<cr>
-noremap <m-p> :LeaderfFunction!<cr>
-noremap <m-n> :LeaderfBuffer<cr>
-noremap <m-m> :LeaderfTag<cr>
+" let g:Lf_ShortcutB = '<m-n>'
+" noremap <m-p> :LeaderfFunction!<cr>
+" noremap <m-n> :LeaderfBuffer<cr>
+" noremap <m-m> :LeaderfTag<cr>
 let g:Lf_StlSeparator = { 'left': '', 'right': '', 'font': '' }
 
 let g:Lf_RootMarkers = ['.project', '.root', '.svn', '.git']
@@ -703,27 +450,12 @@ let g:Lf_HideHelp = 1
 let g:Lf_StlColorscheme = 'powerline'
 let g:Lf_PreviewResult = {'Function':0, 'BufTag':0}
 
-" Trying out LeaderF
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                fzf.vim                                  "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" This hides the dumb "N/M" propt which shows num match/num total entries
-" let $FZF_DEFAULT_OPTS .= '--color pointer:0,bg+:-1,info:0,prompt:0 --inline-info'
-" " This hides the current folder prefix to file search
-" let g:fzf_files_options = ['--prompt', '> ']
-""
-"nnoremap <leader>t :Files<cr>
-"nnoremap <leader>n :History<cr>
-
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 undotree                                "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " f5 toggles the Gundo plugin window
-nnoremap <F4> :UndotreeToggle<CR>
 let g:undotree_width=80
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -745,6 +477,7 @@ if !isdirectory(s:vim_tags)
    silent! call mkdir(s:vim_tags, 'p')
 endif
 
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                asyncrun                                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -752,28 +485,17 @@ endif
 let g:asyncrun_open = 6
 let g:asyncrun_bell = 1
 let g:asyncrun_rootmarks = ['.svn', '.git', '.root', '_darcs', 'build.xml']
-nnoremap <silent> <F8> :AsyncRun -cwd=<root> make <cr>
-nnoremap <silent> <F5> :AsyncRun g++ -Wall -O2 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)" <cr>
-nnoremap <silent> <F11> :AsyncRun -raw -cwd=$(VIM_FILEDIR) "$(VIM_FILEDIR)/$(VIM_FILENOEXT)" <cr>
-nnoremap <F10> :call asyncrun#quickfix_toggle(6)<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                yankring                                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-"let g:yankring_history_dir = '$HOME/tmp/vim'
-"" this is so that single char deletes don't end up in the yankring
-"let g:yankring_min_element_length = 2
-"let g:yankring_window_height = 14
-"nnoremap <leader>r :YRShow<CR>
-"
-"" this makes Y yank from the cursor to the end of the line, which makes more
-"" sense than the default of yanking the whole current line (we can use yy for
-"" that)
-"fun! YRRunAfterMaps()
-"  nnoremap Y :<C-U>YRYankCount 'y$'<CR>
-"endfunction
+let g:yankring_history_dir = '$HOME/tmp/vim'
+" this is so that single char deletes don't end up in the yankring
+let g:yankring_min_element_length = 2
+let g:yankring_window_height = 14
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                session                                  "
@@ -781,23 +503,15 @@ nnoremap <F10> :call asyncrun#quickfix_toggle(6)<cr>
 " you also need to run :SaveSession once to create the default.vim session that
 " will then be autoloaded/saved from then on
 
-"let g:session_autoload        = 'no'
-"let g:session_autosave        = 'yes'
-"let g:session_default_to_last = 'yes'
-"let g:session_directory       = '~/tmp/vim/sessions'
+let g:session_autoload        = 'no'
+let g:session_autosave        = 'yes'
+let g:session_default_to_last = 'yes'
+let g:session_directory       = '~/tmp/vim/sessions'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                tabular                                  "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" looks at the current line and the lines above and below it and aligns all the
-" equals signs; useful for when we have several lines of declarations
-nnoremap <leader>a= :Tabularize /=<CR>
-vnoremap <leader>a= :Tabularize /=<CR>
-nnoremap <leader>a/ :Tabularize /\/\//l2c1l0<CR>
-vnoremap <leader>a/ :Tabularize /\/\//l2c1l0<CR>
-nnoremap <leader>a, :Tabularize /,/l0r1<CR>
-vnoremap <leader>a, :Tabularize /,/l0r1<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                UltiSnips                                "
@@ -817,20 +531,6 @@ let g:snips_author                 = 'Strahinja Val Markovic'
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              vim-preview                                "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" This forces vim-preview to use the default browser on linux; it already uses
-" 'open' on Mac.
-"if has("unix")
-"  let g:PreviewBrowsers = "xdg-open"
-"endif
-"
-"let g:PreviewMarkdownFences = 1
-
-" Use :Preview command to open in browser!
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                ack.vim                                  "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -844,16 +544,7 @@ elseif executable('ack')
   let g:ackprg = "ack --nocolor --nogroup --column"
 endif
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                bufkill                                  "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" Use the arrows for something useful
-" :BB switches to the previous buffer shown in the current window, :BF switches
-" to the next one; it's like a buffer history for every window
-" noremap <right> :BF<cr>
-" noremap <left> :BB<cr>
-
+cnoreabbrev Ack Ack!
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                fswitch                                  "
@@ -897,22 +588,6 @@ augroup END
 " Turn on spell checking by default for git commit messages
 au vimrc FileType gitcommit setlocal spell! spelllang=en_us
 
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                tagbar                                   "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-"let g:tagbar_left = 1
-"let g:tagbar_sort = 0
-"let g:tagbar_width = 60
-"let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
-
-" *OpenAutoClose is meant to be used for the usecase of 'open Tagbar, move
-" cursor there, move to entry, press enter, close window'. Differs from the
-" *Toggle version by moving the cursor to the window and closing the window once
-" an entry is selected.
-"nnoremap <F3> :TagbarOpenAutoClose<cr>
-"nnoremap <F4> :TagbarToggle<cr><c-w>=
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                               delimitMate                               "
@@ -971,40 +646,6 @@ let g:ale_python_flake8_options = '--max-line-length=80 ' .
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              YouCompleteMe                              "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-"let g:ycm_server_python_interpreter='/usr/bin/python2'
-"let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
-"
-"
-"let g:ycm_clangd_uses_ycmd_caching = 1
-"
-"let g:ycm_filetype_blacklist = {
-"      \ 'tagbar': 1,
-"      \ 'notes': 1,
-"      \ 'markdown': 1,
-"      \ 'netrw': 1,
-"      \ 'unite': 1,
-"      \ 'text': 1,
-"      \ 'vimwiki': 1,
-"      \ 'pandoc': 1,
-"      \ 'infolog': 1,
-"      \ 'mail': 1,
-"      \ 'hgcommit': 1,
-"      \ 'gitcommit': 1
-"      \}
-"
-"nnoremap <leader>y :YcmForceCompileAndDiagnostics<cr>
-"nnoremap <leader>g :YcmCompleter GoTo<CR>
-"nnoremap <leader>pd :YcmCompleter GoToDefinition<CR>
-"nnoremap <leader>pc :YcmCompleter GoToDeclaration<CR>
-"
-"" Using <space> at the end to make it more visible and prevent trimming
-"nnoremap <f6> :YcmCompleter RefactorRename<space>
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                Airline                                  "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -1015,33 +656,10 @@ let g:airline_theme = 'onedark'
 let g:airline#extensions#tagbar#enabled = 0
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                            vim-indent-guides                            "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_color_change_percent = 7
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                             MatchTagAlways                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let g:mta_use_matchparen_group = 0
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                 eregex                                  "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-let g:eregex_default_enable = 0
-
-" Toggles '/' to mean eregex search or normal Vim search
-nnoremap <leader>/ :call eregex#toggle()<CR>
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                          vim-instant-markdown                           "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-let g:instant_markdown_autostart = 0
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1050,38 +668,6 @@ let g:instant_markdown_autostart = 0
 
 let g:ophigh_filetypes_to_ignore = { "spansdl": 1 }
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              vim-quickhl                                "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" Doesn't work, so we do it manually with an au event
-" let g:quickhl_cword_enable_at_startup = 1
-
-"au vimrc BufEnter * :QuickhlCwordEnable
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                               NERDTree                                  "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-"nnoremap <F2> :NERDTree<cr>
-"nnoremap <F2> :NERDTreeToggle<cr>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                            vim-derish                                   "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" nnoremap <Tab>7
-" nnoremap <Tab>8
-" nnoremap <Tab>9
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                            vim-vinegar                                   "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-noremap <silent><tab>6 :VinegarOpen leftabove vs<cr>
-noremap <silent><tab>7 :VinegarOpen vs<cr>
-noremap <silent><tab>8 :VinegarOpen belowright sp<cr>
-noremap <silent><tab>9 :VinegarOpen tabedit<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              vim-signify                                "
@@ -1092,7 +678,7 @@ set updatetime=100
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              emmet-vim                                "
+"                              emmet-vim                                  "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let g:user_emmet_settings = {
@@ -1137,10 +723,6 @@ let g:ycm_semantic_triggers =  {
            \ 'lua,javascript': ['re!\w{2}'],
            \ }
 
-nnoremap <leader>y :YcmForceCompileAndDiagnostics<cr>
-nnoremap <leader>g :YcmCompleter GoTo<CR>
-nnoremap <leader>pd :YcmCompleter GoToDefinition<CR>
-nnoremap <leader>pc :YcmCompleter GoToDeclaration<CR>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1152,19 +734,9 @@ if at_work
   exec 'source ' . work_path
 endif
 
-" TODO: cleanup
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              My Own  OVERRIDE                           "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" fzf sometimes has bug
-nnoremap <C-m> :bro ol<CR>
-
-" complete quicker
-inoremap <C-]> <C-X><C-]>
-inoremap <C-F> <C-X><C-F>
-inoremap <C-D> <C-X><C-D>
-inoremap <C-L> <C-X><C-L>
-
 " make comments and HTML attributes italic
 highlight Comment cterm=italic term=italic gui=italic
 highlight htmlArg cterm=italic term=italic gui=italic
@@ -1176,8 +748,7 @@ highlight xmlAttrib cterm=italic term=italic gui=italic
 
 "<F5> run program
 "<F6>
-"<F7> paste
-"<F8> make
+"<F7> paste <F8> make
 
 "<F9> compile cpp
 "<F10> quickfix toggle
@@ -1185,10 +756,6 @@ highlight xmlAttrib cterm=italic term=italic gui=italic
 "<F12>
 "
 
-nnoremap <Tab> >>
-nnoremap <S-Tab> <<
-
-nnoremap gb :ls<CR>:b<Space>
 
 "set path=.,**
 
@@ -1222,7 +789,6 @@ set wildignore+=*.linux2,*.win32,*.darwin,*.freebsd,*.linux,*.android
 " will insert tab at beginning of line,
 " will use completion if not at beginning
 "*****************************************************************************
-set wildmode=list:longest,list:full
 function! InsertTabWrapper()
     let col = col('.') - 1
     if !col || getline('.')[col - 1] !~ '\k'
