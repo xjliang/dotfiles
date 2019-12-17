@@ -118,7 +118,18 @@ let g:snips_author                 = 'Strahinja Val Markovic'
 "----------------------------------------------------------------------
 
 if executable('ag')
-  let g:ackprg = "ag --nocolor --nogroup --column"
+    "let g:ackprg = "ag --nocolor --nogroup --column"
+    " Note we extract the column as well as the file and line number
+    " Have the silver searcher ignore all the same things as wilgignore
+    let b:ag_command = 'ag %s -i --nocolor --nogroup'
+
+    for i in split(&wildignore, ",")
+      let i = substitute(i, '\*/\(.*\)/\*', '\1', 'g')
+      let b:ag_command = b:ag_command . ' --ignore "' . substitute(i, '\*/\(.*\)/\*', '\1', 'g') . '"'
+    endfor
+
+    let b:ag_command = b:ag_command . ' --hidden -g ""'
+    let g:ctrlp_user_command = b:ag_command
 elseif executable('rg')
   let g:ackprg = 'rg --vimgrep --no-heading'
 elseif executable('ack-grep')

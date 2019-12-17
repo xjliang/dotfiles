@@ -41,7 +41,7 @@ nnoremap <leader>w :w!<cr>
 
 " <leader>v brings up .vimrc
 " <leader>V reloads it and makes all changes active (file has to be saved first)
-noremap <leader>e :e! $MYVIMRC<CR>
+noremap <leader>ev :e! $MYVIMRC<CR>
 noremap <silent> <leader>E :source $MYVIMRC<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
 
 "" Git
