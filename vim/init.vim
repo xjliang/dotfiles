@@ -1,22 +1,22 @@
-"*****************************************************************************
+"----------------------------------------------------------------------
 " Last modification: Tue Dec 17 00:22:52 DST 2019
 "
 " Guided by vim-bootstrap: https://github.com/avelino/vim-bootstrap
 " Change your ~/.vimrc as follows:
 "   set runtimepath+=<path to this repository>
 "   source <path to this repository>/vimrc
-"*****************************************************************************
+"----------------------------------------------------------------------
 
-"*****************************************************************************
-"" preamble
-"*****************************************************************************
+"----------------------------------------------------------------------
+" preamble
+"----------------------------------------------------------------------
 
 let work_path = $HOME . '/work/work_vim_settings.vim'
 let at_work = filereadable( work_path )
 
-"*****************************************************************************
-"" Vim-PLug core
-"*****************************************************************************
+"----------------------------------------------------------------------
+" Vim-PLug core
+"----------------------------------------------------------------------
 let vimplug_exists=expand('~/.vim/autoload/plug.vim')
 
 let g:vim_bootstrap_langs = "c,haskell,html,javascript,lua,perl,php,python"
@@ -38,9 +38,9 @@ endif
 " Required:
 call plug#begin(expand('~/.vim/plugged'))
 
-"*****************************************************************************
-"" Plug install packages
-"*****************************************************************************
+"----------------------------------------------------------------------
+" Plug install packages
+"----------------------------------------------------------------------
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-airline/vim-airline'
 
@@ -75,6 +75,7 @@ Plug 'tpope/vim-vinegar'
 
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'skywind3000/asyncrun.vim', {'for': ['c', 'cpp']}
+Plug 'skywind3000/vim-preview'
 
 "" Snippets
 Plug 'SirVer/ultisnips'
@@ -109,9 +110,9 @@ augroup load_html
 augroup END
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                           reset vimrc augroup                           "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+" reset vimrc augroup
+"----------------------------------------------------------------------
 
 " We reset the vimrc augroup. Autocommands are added to this group throughout
 " the file
@@ -119,17 +120,19 @@ augroup vimrc
   au!
 augroup END
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                        turn on filetype plugins                         "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"----------------------------------------------------------------------
+" turn on filetype plugins
+"----------------------------------------------------------------------
 
 " Enable detection, plugins and indenting in one step
 " This needs to come AFTER the Plugin commands!
 filetype plugin indent on
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                            General settings                             "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"----------------------------------------------------------------------
+"                          General settings
+"----------------------------------------------------------------------
 
 " Home away from home. We store some config files and snippets here and the
 " whole dotfiles dir is a git repo. Should be the last entry in rtp (for
@@ -235,8 +238,8 @@ let g:is_posix = 1
 set shortmess=a
 
 " this solves the "unable to open swap file" errors on Win7
-set dir=~/tmp,/var/tmp,/tmp,$TEMP
-set undodir=~/tmp,/var/tmp,/tmp,$TEMP
+set dir=~/.cache/tmp,/var/tmp,/tmp,$TEMP
+set undodir=~/.cache/tmp,/var/tmp,/tmp,$TEMP
 
 " Look for tag def in a "tags" file in the dir of the current file, then for
 " that same file in every folder above the folder of the current file, until the
@@ -352,16 +355,10 @@ au vimrc FileType c
       \ set softtabstop=8 |
       \ set noexpandtab
 
-" The stupid rust filetype plugin overrides our settings!
-"au vimrc FileType rust
-"      \ set tabstop=2 |
-"      \ set shiftwidth=2 |
-"      \ set softtabstop=2 |
-"      \ set textwidth=80
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                           More involved tweaks                          "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+"                          More involved tweaks
+"----------------------------------------------------------------------
 
 " Unicode support (taken from http://vim.wikia.com/wiki/Working_with_Unicode)
 if has("multi_byte")
@@ -427,17 +424,15 @@ au vimrc FileType markdown setlocal spell! spelllang=en_us
 au vimrc BufReadCmd *.epub call zip#Browse( expand( "<amatch>" ) )
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                       ***  HERE BE PLUGINS  ***                         "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+"                    *** HERE BE PLUGINS ***
+"----------------------------------------------------------------------
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                               LeaderF                                   "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+" LeaderF
+"----------------------------------------------------------------------
 
 " let g:Lf_ShortcutB = '<m-n>'
-" noremap <m-p> :LeaderfFunction!<cr>
-" noremap <m-n> :LeaderfBuffer<cr>
 " noremap <m-m> :LeaderfTag<cr>
 let g:Lf_StlSeparator = { 'left': '', 'right': '', 'font': '' }
 
@@ -451,16 +446,17 @@ let g:Lf_StlColorscheme = 'powerline'
 let g:Lf_PreviewResult = {'Function':0, 'BufTag':0}
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                 undotree                                "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+" undotree
+"----------------------------------------------------------------------
 
 " f5 toggles the Gundo plugin window
 let g:undotree_width=80
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              gutentags                                  "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"----------------------------------------------------------------------
+" gutentags
+"----------------------------------------------------------------------
 
 let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
 
@@ -478,28 +474,28 @@ if !isdirectory(s:vim_tags)
 endif
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                asyncrun                                 "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+" asyncrun
+"----------------------------------------------------------------------
 
 let g:asyncrun_open = 6
 let g:asyncrun_bell = 1
 let g:asyncrun_rootmarks = ['.svn', '.git', '.root', '_darcs', 'build.xml']
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                yankring                                 "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+" yankring
+"----------------------------------------------------------------------
 
-let g:yankring_history_dir = '$HOME/tmp/vim'
+let g:yankring_history_dir = '$HOME/.cache'
 " this is so that single char deletes don't end up in the yankring
 let g:yankring_min_element_length = 2
 let g:yankring_window_height = 14
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                session                                  "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+" session
+"----------------------------------------------------------------------
 " you also need to run :SaveSession once to create the default.vim session that
 " will then be autoloaded/saved from then on
 
@@ -508,14 +504,10 @@ let g:session_autosave        = 'yes'
 let g:session_default_to_last = 'yes'
 let g:session_directory       = '~/tmp/vim/sessions'
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                tabular                                  "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                UltiSnips                                "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+" UltiSnips
+"----------------------------------------------------------------------
 
 " we can't use <tab> as our snippet key since we use that with YouCompleteMe
 let g:UltiSnipsSnippetsDir         = $HOME . '/dotfiles/vim/UltiSnips'
@@ -530,14 +522,14 @@ let g:snips_author                 = 'Strahinja Val Markovic'
 " the letter "i" after the snippet header. Ex: snippet ss "std::string" i
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                ack.vim                                  "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+" ack.vim
+"----------------------------------------------------------------------
 
-if executable('rg')
-  let g:ackprg = 'rg --vimgrep --no-heading'
-elseif executable('ag')
+if executable('ag')
   let g:ackprg = "ag --nocolor --nogroup --column"
+elseif executable('rg')
+  let g:ackprg = 'rg --vimgrep --no-heading'
 elseif executable('ack-grep')
   let g:ackprg = "ack-grep --nocolor --nogroup --column"
 elseif executable('ack')
@@ -545,10 +537,12 @@ elseif executable('ack')
 endif
 
 cnoreabbrev Ack Ack!
+let g:ackhighlight = 1
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                fswitch                                  "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"----------------------------------------------------------------------
+" fswitch
+"----------------------------------------------------------------------
 
 " A "companion" file is a .cpp file to an .h file and vice versa
 
@@ -581,30 +575,32 @@ augroup workccfiles
   au BufEnter *.h  let b:fswitchlocs = './,reg:/include/src/,reg:/include.*/src/,../src'
 augroup END
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                vim-git                                  "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"----------------------------------------------------------------------
+" vim-git
+"----------------------------------------------------------------------
 
 " Turn on spell checking by default for git commit messages
 au vimrc FileType gitcommit setlocal spell! spelllang=en_us
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                               delimitMate                               "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+" delimitMate
+"----------------------------------------------------------------------
 
 au vimrc FileType html,xhtml,markdown let b:delimitMate_matchpairs = "(:),[:],{:}"
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              vim-css-color                              "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"----------------------------------------------------------------------
+" vim-css-color
+"----------------------------------------------------------------------
 
 let g:cssColorVimDoNotMessMyUpdatetime = 1
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                 ALE                                    "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+" Ale
+"----------------------------------------------------------------------
 
 " Unlike syntastic, ALE supports async linting.
 " NOTE: Fills Vim's location list with errors/warnings, NOT the quickfix list!
@@ -633,7 +629,6 @@ hi! SpellBad cterm=undercurl ctermfg=red
 hi! SpellCap cterm=undercurl ctermfg=blue
 hi! SpellRare cterm=undercurl ctermfg=magenta
 
-
 " Note: Overriden in work vim settings
 let g:ale_linters = {
 \   'python': ['flake8'],
@@ -645,9 +640,9 @@ let g:ale_python_flake8_options = '--max-line-length=80 ' .
       \ 'E131,E133,E201,E202,E203,E211,E221,E222,E241,E251,E261,E303,E402,W503'
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                Airline                                  "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+" Airline
+"----------------------------------------------------------------------
 
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'onedark'
@@ -655,31 +650,42 @@ let g:airline_theme = 'onedark'
 " truncation.
 let g:airline#extensions#tagbar#enabled = 0
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                             MatchTagAlways                              "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"----------------------------------------------------------------------
+" MatchTagAlways
+"----------------------------------------------------------------------
 
 let g:mta_use_matchparen_group = 0
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                         vim-operator-highlight                          "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+" vim-operator-highlight
+"----------------------------------------------------------------------
 
 let g:ophigh_filetypes_to_ignore = { "spansdl": 1 }
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              vim-signify                                "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"set signcolumn=yes
-" default updatetime 4000ms is not good for async update
-set updatetime=100
+"----------------------------------------------------------------------
+" Signify
+"----------------------------------------------------------------------
+
+let g:signify_vcs_list = ['git', 'svn']
+let g:signify_difftool = 'diff'
+let g:signify_sign_add               = '+'
+let g:signify_sign_delete            = '_'
+let g:signify_sign_delete_first_line = '‾'
+let g:signify_sign_change            = '~'
+let g:signify_sign_changedelete      = g:signify_sign_change
+let g:signify_as_gitgutter           = 1
+
+let g:signify_vcs_cmds = {
+			\ 'git': 'git diff --no-color --diff-algorithm=histogram --no-ext-diff -U0 -- %f',
+			\}
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              emmet-vim                                  "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+" Emmet
+"----------------------------------------------------------------------
 
 let g:user_emmet_settings = {
 \  'php' : {
@@ -691,16 +697,18 @@ let g:user_emmet_settings = {
 \  },
 \}
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              echodoc                                    "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"----------------------------------------------------------------------
+" echodoc
+"----------------------------------------------------------------------
 
 let g:echodoc_enable_at_startup = 1
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                           YouCompleteMe                                "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+" YouCompleteMe
+"----------------------------------------------------------------------
+
 let g:ycm_server_python_interpreter='/usr/bin/python2'
 let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
 
@@ -724,45 +732,27 @@ let g:ycm_semantic_triggers =  {
            \ }
 
 
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              VIMRC OVERRIDE                             "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"----------------------------------------------------------------------
+" VIMRC OVERRIDE
+"----------------------------------------------------------------------
 
 " If we are at our work workstation, then do some things differently
 if at_work
   exec 'source ' . work_path
 endif
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              My Own  OVERRIDE                           "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"----------------------------------------------------------------------
 " make comments and HTML attributes italic
+"----------------------------------------------------------------------
 highlight Comment cterm=italic term=italic gui=italic
 highlight htmlArg cterm=italic term=italic gui=italic
 highlight xmlAttrib cterm=italic term=italic gui=italic
 
-"<F2>
-"<F3>
-"<F4> undotree toggle
 
-"<F5> run program
-"<F6>
-"<F7> paste <F8> make
-
-"<F9> compile cpp
-"<F10> quickfix toggle
-"<F11>
-"<F12>
-"
-
-
-"set path=.,**
-
-"*****************************************************************************
-"                             Wildignore                                     "
-"*****************************************************************************
-
+"----------------------------------------------------------------------
+" Wildignore
+"----------------------------------------------------------------------
 set suffixes=.bak,~,.o,.info,.swp,.obj,.pyc,.pyo,.egg-info,.class
 
 set wildignore=*.o,*.obj,*~,*.exe,*.a,*.pdb,*.lib "stuff to ignore when tab completing
@@ -784,11 +774,11 @@ set wildignore+=*.linux2,*.win32,*.darwin,*.freebsd,*.linux,*.android
 
 
 " Conflict with UltiSnips
-"*****************************************************************************
+"----------------------------------------------------------------------
 " Tab completion
 " will insert tab at beginning of line,
 " will use completion if not at beginning
-"*****************************************************************************
+"----------------------------------------------------------------------
 function! InsertTabWrapper()
     let col = col('.') - 1
     if !col || getline('.')[col - 1] !~ '\k'
