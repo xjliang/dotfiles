@@ -21,6 +21,21 @@ let maplocalleader="-"
 let g:Lf_ShortcutF = '<leader>f'
 noremap <leader>m :LeaderfMru<cr>
 
+"" Preview
+noremap <silent><m-;> :PreviewTag<cr>
+" noremap <silent>g5 :PreviewTag<cr>
+"noremap <silent><m-:> :PreviewClose<cr>
+noremap <silent><tab>; :PreviewGoto edit<cr>
+noremap <silent><tab>: :PreviewGoto tabe<cr>
+autocmd FileType qf nnoremap <silent><buffer> p :PreviewQuickfix<cr>
+autocmd FileType qf nnoremap <silent><buffer> P :PreviewClose<cr>
+" noremap <F3> :PreviewSignature!<cr>
+" inoremap <F3> <c-\><c-o>:PreviewSignature!<cr>
+noremap <m-u> :PreviewScroll -1<cr>
+noremap <m-d> :PreviewScroll +1<cr>
+inoremap <m-u> <c-\><c-o>:PreviewScroll -1<cr>
+inoremap <m-d> <c-\><c-o>:PreviewScroll +1<cr>
+
 " Fast saving
 nnoremap <leader>w :w!<cr>
 
@@ -53,19 +68,21 @@ noremap <silent><tab>9 :VinegarOpen tabedit<cr>
 
 nnoremap <F4> :UndotreeToggle<CR>
 
+nmap <script> <silent> <F2> :call ToggleQuickFix()<CR>
 
 "" Ack
 nnoremap <Leader>a :Ack!<Space>
+nnoremap <Leader>p :Ack!<Space><cword><cr>
 
 "" Split
 nnoremap <leader>v :vs<CR>
 nnoremap <leader>h :sp<CR>
 
 " fzf sometimes has bug
-nnoremap <C-m> :bro ol<CR>
+"nnoremap <C-m> :bro ol<CR>
 
-nnoremap <Tab> >>
-nnoremap <S-Tab> <<
+" nnoremap <Tab> >>
+" nnoremap <S-Tab> <<
 
 nnoremap gb :ls<CR>:b<Space>
 
@@ -214,3 +231,8 @@ nnoremap <backspace> :nohl<CR>
 " such an operation.
 vnoremap < <gv
 vnoremap > >gv
+
+
+" switch comma-separated arguments
+nnoremap [w  :normal F,h]w2w<cr>
+nnoremap ]w  :let s=&isk \| setl isk+=\",' \| exe "norm diwmmebgPdw'mP" \| let &isk=s<cr>
