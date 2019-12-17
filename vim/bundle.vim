@@ -65,7 +65,7 @@ Plug 'skywind3000/vim-preview'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
-"Plug 'Valloric/vim-operator-highlight'
+Plug 'Valloric/vim-operator-highlight'
 "Plug 'Valloric/vim-valloric-colorscheme'
 
 "Plug 'octol/vim-cpp-enhanced-highlight', {'for': 'cpp' }
@@ -112,4 +112,3 @@ augroup END
 " Enable detection, plugins and indenting in one step
 " This needs to come AFTER the Plugin commands!
 filetype plugin indent on
-

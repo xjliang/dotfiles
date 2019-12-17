@@ -118,7 +118,7 @@ let g:snips_author                 = 'Strahinja Val Markovic'
 "----------------------------------------------------------------------
 
 if executable('ag')
-    "let g:ackprg = "ag --nocolor --nogroup --column"
+    let g:ackprg = "ag --nocolor --nogroup --column"
     " Note we extract the column as well as the file and line number
     " Have the silver searcher ignore all the same things as wilgignore
     let b:ag_command = 'ag %s -i --nocolor --nogroup'
@@ -206,6 +206,8 @@ let g:cssColorVimDoNotMessMyUpdatetime = 1
 
 " Unlike syntastic, ALE supports async linting.
 " NOTE: Fills Vim's location list with errors/warnings, NOT the quickfix list!
+let g:ale_sign_error = '🛑'
+let g:ale_sign_warning = '⚠'
 
 let g:ale_linters_explicit = 1
 let g:ale_completion_delay = 500
