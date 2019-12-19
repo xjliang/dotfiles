@@ -49,8 +49,7 @@ if [[ -n $confim && $confirm != "y" && $confirm != "yes" ]]; then
 fi
 
 echo -e "Downloading and installing..."
-# TODO: open comment
-#git clone --quiet https://github.com/eeux/dotfiles.git dotfiles
+git clone --quiet https://github.com/eeux/dotfiles.git dotfiles
 cd dotfiles
 
 # Build up a list of all the dotfiles (ignoring .git and .gitignore)
