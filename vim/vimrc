@@ -162,7 +162,7 @@ endif
 
 " TODO
 " Spelling
-set dictionary+=/usr/share/dict/words thesaurus+=$HOME/.thesaurus
+set dictionary+=/usr/share/dict/words thesaurus+=$HOME/.vim/thesaurus/thesaurii.txt
 
 " Text display
 set listchars=trail:.,tab:>-,extends:>,precedes:<,nbsp:¬
@@ -619,6 +619,12 @@ au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g
     inoremap <C-l> <C-x><C-l>
     " tags
     inoremap <C-]> <C-x><C-]>
+    " thesaurus
+    inoremap <C-t> <C-x><C-t>
+    " included files
+    inoremap <C-i> <C-x><C-i>
+    " macros
+    inoremap <C-d> <C-x><C-d>
 
     " format paragraph
     vnoremap Q gq
