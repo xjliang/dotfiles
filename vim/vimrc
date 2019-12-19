@@ -82,7 +82,12 @@ noremap <silent><tab>9 :VinegarOpen tabedit<cr>
 
 let g:netrw_liststyle = 1
 let g:netrw_winsize = 25
-let g:netrw_list_hide = '\./,\.swp\($\|\t\),\.py[co]\($\|\t\),\.o\($\|\t\),\.bak\($\|\t\),\(^\|\s\s\)\zs\.\S\+'
+"let g:netrw_hide = 1
+"let g:netrw_list_hide = '^\.\.\=/\=$,\.swp\($\|\t\),\.py[co]\($\|\t\),\.o\($\|\t\),\.bak\($\|\t\),\(^\|\s\s\)\zs\.\S\+'
+"let g:netrw_list_hide= '.*\.swp$,.DS_Store,*/tmp/*,*.so,*.swp,*.zip,*.git,^\.\./$'
+let g:netrw_list_hide = '^\..*'        " or anything you like
+let g:netrw_hide = 1                   " hide by default
+
 let g:netrw_sort_sequence = '[\/]$,*,\.bak$,\.o$,\.info$,\.swp$,\.obj$'
 let g:netrw_preview = 0
 let g:netrw_special_syntax = 1
@@ -314,6 +319,16 @@ nnoremap \ :Ag<SPACE>
 
 " {{{ Autocommands
 
+" set cursorline
+autocmd InsertEnter,InsertLeave * set cul!
+
+" https://vim.fandom.com/wiki/Change_cursor_shape_in_different_modes
+" Only work for VTE compatible terminals (urxvt, st, xterm, gnome-terminal 3.x, Konsole
+" KDE5 and others)
+let &t_SI = "\<Esc>[6 q"
+let &t_SR = "\<Esc>[4 q"
+let &t_EI = "\<Esc>[2 q"
+
 " Make the modification indicator [+] white on red background
 au ColorScheme * hi User1 gui=bold term=bold cterm=bold guifg=white guibg=red ctermfg=white ctermbg=red
 
@@ -477,7 +492,7 @@ nnoremap ,<TAB> :set et! list!<CR>
 " Misc {{{
 
 " move to first non-empty word
-nnoremap 0 0w
+nnoremap 0 ^
 
 " center the screen
 nnoremap * *zzzv
