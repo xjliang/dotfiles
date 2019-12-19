@@ -1,0 +1,71 @@
+"vim: et nolist sw=4 ts=4 sts=4
+
+
+"-------------- File related
+<leader>w :w!<cr>
+<leader>q :q<cr>
+
+<leader>ev :e! $MYVIMRC<CR>
+<leader>E :source $MYVIMRC<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
+
+<leader>b :buffer <C-z><S-Tab>
+<leader>B :sbuffer <C-z><S-Tab>
+
+<leader>f :find *
+<leader>F :find <C-R>=expand('%:h').'/*'<CR>
+
+<leader>s :sfind *
+<leader>S :sfind <C-R>=expand('%:h').'/*'<CR>
+
+<leader>t :tabfind *
+<leader>T :tabfind <C-R>=expand('%:h').'/*'<CR>
+
+<leader>v :vert sfind *
+<leader>V :vert sfind <C-R>=expand('%:h').'/*'<CR>
+
+<leader>j :tjump / "jump to tags
+
+
+"------------- Buffer related
+<leader>ba :bufdo bd<cr>
+<leader>bd :bdelete<cr>
+<leader>bq <c-^> :bd #<cr>
+
+<leader>cd :cd%:p:h<cr>:pwd<cr>
+
+<leader>html :-1read $HOME/.vim/.skeleton.html<CR>6jwf>a
+<leader>m :bro ol<cr>
+
+"------------- Spell related
+<leader>sa zg
+<leader>sn ]s
+<leader>sp [s
+<leader>ss :setlocal spell! spelllang=en_us<cr>
+<leader>su z=
+
+"------------- Tab related
+<leader>tc :tabclose<cr>
+<leader>tm :tabmove
+<leader>tn :tabnew<cr>
+<leader>to :tabonly<cr>
+
+"------------- Window related
+<leader>h :sp<CR>
+<leader>v :vs<CR>
+<leader>c <c-w>c    " close current window
+<leader>o <c-w>o    " close other window
+
+<leader>- 15<c-w>-  " shrink vertically
+<leader>= 15<c-w>+  " expand vertically
+<leader>z :ZoomToggle<CR>
+
+
+"-------------- InterestingWord related
+<silent> <leader>0 :call ClearAllHi()<cr>
+<silent> <leader>1 :call HiInterestingWord(1)<cr>
+<silent> <leader>2 :call HiInterestingWord(2)<cr>
+<silent> <leader>3 :call HiInterestingWord(3)<cr>
+<silent> <leader>4 :call HiInterestingWord(4)<cr>
+<silent> <leader>5 :call HiInterestingWord(5)<cr>
+<silent> <leader>6 :call HiInterestingWord(6)<cr>
+
