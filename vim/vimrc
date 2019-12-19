@@ -175,7 +175,7 @@ set complete-=i
 set nowrap
 set tabstop=4 shiftwidth=4 softtabstop=4
 set foldlevelstart=2
-set foldmethod=syntax
+"set foldmethod=syntax
 
 " Status line
 "set statusline=%!MyStatusLine()
@@ -214,6 +214,10 @@ set shortmess=atI
 
 " for ctags
 set tags=./.tags;.tags
+set tags+=~/.vim/tags/cpp
+
+" build tags of your own project with Ctrl-F12
+map <C-F12> :!ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extras=+q . -f .tags<CR>
 
 " show color column
 set textwidth=80
@@ -472,6 +476,9 @@ nnoremap ,<TAB> :set et! list!<CR>
 
 " Misc {{{
 
+" move to first non-empty word
+nnoremap 0 0w
+
 " center the screen
 nnoremap * *zzzv
 nnoremap # #zzzv
@@ -591,8 +598,12 @@ au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g
     nnoremap <silent> zk O<Esc>j
 
     " fast complete
-    inoremap <C-f> <C-x><C-f> " file name complete
-    inoremap <C-l> <C-x><C-l> " line complete
+    " filename
+    inoremap <C-f> <C-x><C-f>
+    " line
+    inoremap <C-l> <C-x><C-l>
+    " tags
+    inoremap <C-]> <C-x><C-]>
 
     " format paragraph
     vnoremap Q gq
