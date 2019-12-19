@@ -83,7 +83,7 @@ Plug 'Valloric/python-indent', {'for': 'python'}
 Plug 'vim-scripts/python.vim', {'for': 'python'}
 Plug 'vim-scripts/python_match.vim', {'for': 'python'}
 
-if !at_work
+if filereadable('$HOME/.vimrc.bundles')
   Plug 'Shougo/echodoc.vim', {'for': ['c', 'cpp']}
   Plug 'ycm-core/YouCompleteMe', {'for': ['c', 'cpp']}
 endif
@@ -327,13 +327,6 @@ augroup workccfiles
   au!
   au BufEnter *.cc let b:fswitchdst  = 'h,hxx'
   au BufEnter *.cc let b:fswitchlocs = './,reg:/src/include/,reg:|src|include/**|,../include'
-
-  if !at_work
-    au BufEnter *.h  let b:fswitchdst  = 'cpp,cc,c'
-  else
-    au BufEnter *.h  let b:fswitchdst  = 'cc,cpp,c'
-  endif
-  au BufEnter *.h  let b:fswitchlocs = './,reg:/include/src/,reg:/include.*/src/,../src'
 augroup END
 
 
