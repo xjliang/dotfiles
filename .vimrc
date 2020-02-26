@@ -1,6 +1,6 @@
 " vim: fdm=marker foldenable sw=4 ts=4 sts=4
 " xjliang's .vimrc File
-" Last Modify: Thu Dec 19 10:26:36 DST 2019
+" Last Modified: 2020/02/16 10:08
 " "zo" to open folds, "zc" to close, "zn" to disable.
 
 " {{{ Preamble
@@ -108,6 +108,8 @@ set dictionary+=/usr/share/dict/words thesaurus+=$HOME/.vim/thesaurus/thesaurii.
 " Text display
 set listchars=trail:.,tab:>-,extends:>,precedes:<,nbsp:¬
 set list
+
+set number
 
 " Typing behavior
 set backspace=indent,eol,start
@@ -396,7 +398,7 @@ nnoremap [f :call SourceHeaderSwap()<CR>
 nnoremap gV `[V`]
 
 " Create a new HTML document.
-nnoremap <leader>html :-1read $HOME/.vim/.skeleton.html<CR>6jwf>a
+nnoremap <leader>html :-1read $HOME/.vim/template/skeleton.html<CR>6jwf>a
 
 " camelCase => camel_case
 vnoremap ,case :s/\v\C(([a-z]+)([A-Z]))/\2_\l\3/g<CR>
@@ -587,6 +589,7 @@ syntax on
 set background=light
 
 try
+    "colorscheme github
     colorscheme PaperColor
 catch
     colorscheme delek
@@ -742,6 +745,25 @@ function! SourceHeaderSwap()
         edit %<.h
     endif
 endfunction
+" }}}
+
+" update last change time {{{
+function! UpdateLastModified()
+	" preparation: save last search, and cursor position.
+	let _s=@/
+	let l = line(".")
+	let c = col(".")
+
+	let n = min([10, line('$')]) " check head
+	let timestamp = strftime('%Y/%m/%d %H:%M') " time format
+	let timestamp = substitute(timestamp, '%', '\%', 'g')
+	let pat = substitute('Last Modified:\s*\zs.*\ze', '%', '\%', 'g')
+	keepjumps silent execute '1,'.n.'s%^.*'.pat.'.*$%'.timestamp.'%e'
+
+	" clean up: restore previous search history, and cursor position
+	let @/=_s
+	call cursor(l, c)
+endfunc
 " }}}
 
 " }}}

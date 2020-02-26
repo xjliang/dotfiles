@@ -1,3 +1,12 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =1
-let g:netrw_dirhist_1='/home/xjliang/dotfiles'
+let g:netrw_dirhistcnt =5
+let g:netrw_dirhist_5='/mnt/d/Study/FzuCource/JavaEE/Resources/网络商城资料'
+let g:netrw_dirhist_4='/home/xjliang/temp'
+let g:netrw_dirhist_3='/mnt/d/study/SoftwareEngineer/SpringBoot'
+let g:netrw_dirhist_2='/mnt/d/study/Java/first-springboot'
+let g:netrw_dirhist_1='/mnt/d/source/blog/xjliang-blog/_posts'
+let g:netrw_dirhist_0='/mnt/d/source/blog'
+let g:netrw_dirhist_9='/home/xjliang'
+let g:netrw_dirhist_8='/mnt/d/source/blog'
+let g:netrw_dirhist_7='/mnt/d/source/blog/xjliang-blog/_posts'
+let g:netrw_dirhist_6='/mnt/d/source/blog/xjliang-blog'

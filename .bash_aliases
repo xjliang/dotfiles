@@ -30,9 +30,7 @@ alias update='sudo apt-get update'
 alias upgrade='sudo apt-get upgrade'
 
 alias df='df -h'
-alias rm='rm -vi'
-alias mv='mv -v'
-alias cp='cp -v'
+alias rm='rm -i'
 
 # make related
 alias make="make -j8"
